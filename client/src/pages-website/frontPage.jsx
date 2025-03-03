@@ -1,10 +1,9 @@
 import React from "react";
+import classes from "../styles/frontPage.module.css";
 
 function FrontPage() {
     return (
-        <div>
-            <h1>Front Page</h1>
-        </div>
+        <div className={classes.frontpageContainer}></div>
     );
 }
 
