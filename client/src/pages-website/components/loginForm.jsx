@@ -1,27 +1,30 @@
-/* Login Form Component */
-
-import React from "react";
-import { useState } from "react";
-
-import classes from "../../styles/loginForm.module.css";
+import React, { useState } from 'react';
+import FacebookLogin from '@greatsumini/react-facebook-login';
+import classes from '../../styles/loginForm.module.css';
 
 function LoginForm() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!email || !password) {
-            setError("Fill both fields");
-            return -1;
+            setError('Fill both fields');
+            return;
         }
-        setError("");
-        alert("Login successful");
+        setError('');
+        alert('Login successful');
     };
 
-    const handleLoginWith = (e) => {
-        alert("Login with FaceBook");
+    const handleFacebookSuccess = (response) => {
+        console.log('Facebook login successful', response);
+        // Handle the response, e.g., authenticate with your backend
+    };
+
+    const handleFacebookFailure = (error) => {
+        console.error('Facebook login failed', error);
+        // Handle the error
     };
 
     return (
@@ -48,11 +51,26 @@ function LoginForm() {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-                    <button type="submit" className={classes.login_button}>Login</button>
-                    <button type="button" className={classes.login_with} onClick={() => handleLoginWith("SAlut")}>Login with FaceBook</button>
-                    <button type="button" className={classes.login_with}>Login with LinkedIn</button>
-                    <button type="button" className={classes.login_with}>Login with Instagram</button>
+                    <button type="submit" className={classes.login_button}>
+                        Login
+                    </button>
                 </form>
+                <FacebookLogin
+                    appId="645771001175191" // Replace with your Facebook App ID
+                    onSuccess={handleFacebookSuccess}
+                    onFail={handleFacebookFailure}
+                    style={{
+                        backgroundColor: '#4267b2',
+                        color: '#fff',
+                        fontSize: '16px',
+                        padding: '12px 24px',
+                        border: 'none',
+                        borderRadius: '4px',
+                        marginTop: '10px',
+                    }}
+                >
+                    Login with Facebook
+                </FacebookLogin>
             </div>
         </div>
     );
