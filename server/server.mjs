@@ -1,25 +1,18 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-
-dotenv.config();
-
+import express from 'express';
+import cors from 'cors';
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true
-}));
-app.use(express.json());
+const corsOptions = {
+    origin: 'http://localhost:5173',
+};
 
-// Test Route
-app.get("/", (req, res) => {
-    res.send("Backend is running!");
+app.use(cors(corsOptions));
+
+app.get('/', (req, res) => {
+    res.json({ fruits: ['apple', 'banana', 'cherry'] });
+    res.send('Hello World!');
 });
 
-// Start Server
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+app.listen(5000, () => {
+    console.log("hello");
 });
