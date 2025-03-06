@@ -1,20 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import classes from '../../styles/loginForm.module.css';
+import axios from 'axios';
 
 function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Legare de backend
+    const [array, setArray] = useState([]);
+
+    const fetchAPI = async () => {
+        const response = await axios.get("http://localhost:5000");
+        setArray(response.data.fruits);
+        console.log(response.data);
+    };
+
+    useEffect(() => {
+        fetchAPI();
+    }, []);
+
+    /////////////////////////////
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // Clear any previous errors
+        setError('');
+
+        // Check if fields are empty
         if (!email || !password) {
-            setError('Fill both fields');
+            setError('Please fill in both fields');
             return;
         }
-        setError('');
-        alert('Login successful');
+
+        // Check if the email format is valid
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (!emailPattern.test(email)) {
+            setError('Please enter a valid email address');
+            return;
+        }
+
+        // Start loading state
+        setIsLoading(true);
+
+        // Simulate a login API call (replace with your real backend call)
+        setTimeout(() => {
+            setIsLoading(false);
+            alert('Login successful');
+        }, 2000);
     };
 
     const handleFacebookSuccess = (response) => {
@@ -28,7 +64,7 @@ function LoginForm() {
     };
 
     return (
-        <div className={classes.container}>
+        <div className={classes.container} >
             <div className={classes.login_box}>
                 <h2>Login</h2>
                 {error && <p className={classes.error_message}>{error}</p>}
@@ -51,8 +87,12 @@ function LoginForm() {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-                    <button type="submit" className={classes.login_button}>
-                        Login
+                    <button
+                        type="submit"
+                        className={classes.login_button}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? 'Logging in...' : 'Login'}
                     </button>
                 </form>
                 <FacebookLogin
@@ -72,7 +112,7 @@ function LoginForm() {
                     Login with Facebook
                 </FacebookLogin>
             </div>
-        </div>
+        </div >
     );
 }
 
