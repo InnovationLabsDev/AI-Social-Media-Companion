@@ -8,6 +8,7 @@ function LoginForm() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [users, setUsers] = useState([]);
 
     // Legare de backend
     const [array, setArray] = useState([]);
@@ -19,7 +20,10 @@ function LoginForm() {
     };
 
     useEffect(() => {
-        fetchAPI();
+        fetch("http://localhost:5000")
+            .then(res => res.json())
+            .then(data => setUsers(data))
+            .catch(err => console.error("Error:", err));
     }, []);
 
     /////////////////////////////
@@ -95,6 +99,18 @@ function LoginForm() {
                         {isLoading ? 'Logging in...' : 'Login'}
                     </button>
                 </form>
+                {/* <div>
+                    {users.map(user => (
+                        <div key={user.id}>
+                            <h3>{user.name} ({user.email})</h3>
+                            {user.picture ? (
+                                <img src={user.picture} alt="User" width="200" />
+                            ) : (
+                                <p>No Picture</p>
+                            )}
+                        </div>
+                    ))}
+                </div> */}
                 <FacebookLogin
                     appId="645771001175191" // Replace with your Facebook App ID
                     onSuccess={handleFacebookSuccess}
