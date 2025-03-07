@@ -28,33 +28,26 @@ function LoginForm() {
 
     /////////////////////////////
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Clear any previous errors
         setError('');
-
-        // Check if fields are empty
-        if (!email || !password) {
-            setError('Please fill in both fields');
-            return;
-        }
-
-        // Check if the email format is valid
-        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        if (!emailPattern.test(email)) {
-            setError('Please enter a valid email address');
-            return;
-        }
-
-        // Start loading state
         setIsLoading(true);
 
-        // Simulate a login API call (replace with your real backend call)
-        setTimeout(() => {
+        if (!email || !password) {
+            setError('Please fill in both fields');
             setIsLoading(false);
-            alert('Login successful');
-        }, 2000);
+            return;
+        }
+
+        try {
+            const response = await axios.post("http://localhost:5000", { email, password });
+
+            alert("Login successful");
+        } catch (err) {
+            setError(err.response?.data?.error || "Login failed");
+        }
+
+        setIsLoading(false);
     };
 
     const handleFacebookSuccess = (response) => {
