@@ -12,9 +12,11 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     background: white;
     background-color: rgb(255, 255, 255, 0.8);
-    padding: 20px;
+    /* margin: 1vw; */
+    /* padding: 20px; */
     /* border-radius: 12px; */
     /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
     height: 50vh;
@@ -30,6 +32,7 @@ h2 {
 .input_group {
     margin-bottom: 12px;
     text-align: left;
+    width: 75vw;
 }
 
 label {
@@ -40,7 +43,9 @@ label {
 
 input {
     width: 100%;
-    padding: 8px;
+    /* padding: 8px; */
+    padding-top: 8px;
+    padding-bottom: 8px;
     border: 1px solid #ccc;
     border-radius: 6px;
 }
@@ -52,7 +57,7 @@ input {
 }
 
 .login_button {
-    width: 100%;
+    width: 75vw;
     background: #3b82f6;
     color: white;
     padding: 10px;
@@ -61,6 +66,7 @@ input {
     cursor: pointer;
     font-size: 16px;
     margin-bottom: 30px;
+    margin-top: 30px
 }
 
 .login_with {
@@ -99,4 +105,25 @@ input {
 
 .register_button>a {
     color: white;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    /* background-color: #14213D; */
+}
+
+.login_box>.facebok_button {
+    /* background-color: '#4267b2';
+    color: '#fff';
+    font-size: '16px';
+    padding: '12px 24px';
+    border: 'none';
+    border-radius: '4px';
+    margin-top: '10px'; */
+    width: 75vw;
 }

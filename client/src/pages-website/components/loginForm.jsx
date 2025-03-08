@@ -72,7 +72,7 @@ function LoginForm() {
                     </button>
                 </h2>
                 {error && <p className={classes.error_message}>{error}</p>}
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className={classes.form}>
                     <div className={classes.input_group}>
                         <label>Email</label>
                         <input
@@ -111,7 +111,7 @@ function LoginForm() {
                         </div>
                     ))}
                 </div> */}
-                <FacebookLogin
+                <FacebookLogin className={classes.facebook_button}
                     appId="645771001175191" // Replace with your Facebook App ID
                     onSuccess={handleFacebookSuccess}
                     onFail={handleFacebookFailure}
@@ -123,6 +123,8 @@ function LoginForm() {
                         border: 'none',
                         borderRadius: '4px',
                         marginTop: '10px',
+                        marginBottom: '10px',
+                        width: '75vw'
                     }}
                 >
                     Login with Facebook
