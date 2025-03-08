@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import FacebookLogin from '@greatsumini/react-facebook-login';
+import { Link } from "react-router-dom";
+
 import classes from '../../styles/loginForm.module.css';
 
 function LoginForm() {
@@ -13,8 +15,8 @@ function LoginForm() {
             setError('Fill both fields');
             return;
         }
-        setError('');
-        alert('Login successful');
+        setError("");
+        //alert("Login successful");
     };
 
     const handleFacebookSuccess = (response) => {
@@ -51,9 +53,10 @@ function LoginForm() {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-                    <button type="submit" className={classes.login_button}>
-                        Login
-                    </button>
+                    <Link to={"/main-page"}><button type="submit" className={classes.login_button}>Login</button></Link>
+                    <button type="button" className={classes.login_with} onClick={() => handleLoginWith("SAlut")}>Login with FaceBook</button>
+                    <button type="button" className={classes.login_with}>Login with LinkedIn</button>
+                    <button type="button" className={classes.login_with}>Login with Instagram</button>
                 </form>
                 <FacebookLogin
                     appId="645771001175191" // Replace with your Facebook App ID
