@@ -72,6 +72,25 @@ app.post("/", async (req, res) => {
     }
 });
 
+app.post("/register", async (req, res) => {
+    const {email, password, name} = req.body;
+    console.log(email, password, name);
+
+
+    try {
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Store the user in the database
+        const [result] = await pool.query("INSERT INTO users (email, password, name) VALUES (?, ?, ?)", [email, hashedPassword, name]);
+
+        res.json({ userId: result.insertId });
+    } catch (error) {
+        console.error("Registration error:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 // Start server
 const PORT = 5000;
 app.listen(PORT, () => {

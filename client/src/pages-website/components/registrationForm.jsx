@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import classes from '../../styles/loginForm.module.css';
+import axios from 'axios';
 
 function RegistrationForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [retypePassword, setRetypePassword] = useState('');
+    const [name, setName] = useState('');
     const [error, setError] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!email || !password || !retypePassword) {
+        if (!email || !password || !retypePassword || !name) {
             setError('All fields are required');
             return;
         }
@@ -19,7 +21,14 @@ function RegistrationForm() {
             return;
         }
         setError('');
-        alert('Registration successful');
+        // alert('Registration successful');
+
+        try {
+            const response = await axios.post("http://localhost:5000/register", { email, password, name });
+            console.log(response.data);
+        } catch (err) {
+            setError(err.response?.data?.error || "Registration failed");
+        }
     };
 
     return (
@@ -29,6 +38,13 @@ function RegistrationForm() {
                 {error && <p className={classes.error_message}>{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className={classes.input_group}>
+                        <label>Name</label>
+                        <input
+                            type="text"
+                            placeholder="Enter your name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
                         <label>Email</label>
                         <input
                             type="email"
