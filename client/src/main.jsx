@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import App from './App.jsx';
 import FrontPage from './pages-website/frontPage.jsx';
+import MainPage from './pages-website/mainPage.jsx';
 import RegistrationForm from './pages-website/components/registrationForm.jsx';
 
 createRoot(document.getElementById('root')).render(
@@ -12,6 +13,7 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<FrontPage />} />
         <Route path="/registration" element={<RegistrationForm />} />
+        <Route path="/main-page" element={<MainPage />} />
         {/* <Route path="/app" element={<App />} /> */}
       </Routes>
     </BrowserRouter>

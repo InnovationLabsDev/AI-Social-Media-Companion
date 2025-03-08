@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import FacebookLogin from '@greatsumini/react-facebook-login';
+import { Link } from "react-router-dom";
+
 import classes from '../../styles/loginForm.module.css';
 import axios from 'axios';
 import RegistrationForm from './registrationForm';
@@ -41,16 +43,8 @@ function LoginForm() {
             setIsLoading(false);
             return;
         }
-
-        try {
-            const response = await axios.post("http://localhost:5000", { email, password });
-
-            alert("Login successful");
-        } catch (err) {
-            setError(err.response?.data?.error || "Login failed");
-        }
-
-        setIsLoading(false);
+        setError("");
+        //alert("Login successful");
     };
 
     const handleFacebookSuccess = (response) => {
@@ -91,13 +85,10 @@ function LoginForm() {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-                    <button
-                        type="submit"
-                        className={classes.login_button}
-                        disabled={isLoading}
-                    >
-                        {isLoading ? 'Logging in...' : 'Login'}
-                    </button>
+                    <Link to={"/main-page"}><button type="submit" className={classes.login_button}>Login</button></Link>
+                    <button type="button" className={classes.login_with} onClick={() => handleLoginWith("SAlut")}>Login with FaceBook</button>
+                    <button type="button" className={classes.login_with}>Login with LinkedIn</button>
+                    <button type="button" className={classes.login_with}>Login with Instagram</button>
                 </form>
                 {/* <div>
                     {users.map(user => (
