@@ -16,7 +16,7 @@ function LoginForm() {
             return;
         }
         setError("");
-        alert("Login successful");
+        //alert("Login successful");
     };
 
     const handleFacebookSuccess = (response) => {
@@ -53,7 +53,7 @@ function LoginForm() {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-                    <button type="submit" className={classes.login_button}>Login</button>
+                    <Link to={"/main-page"}><button type="submit" className={classes.login_button}>Login</button></Link>
                     <button type="button" className={classes.login_with} onClick={() => handleLoginWith("SAlut")}>Login with FaceBook</button>
                     <button type="button" className={classes.login_with}>Login with LinkedIn</button>
                     <button type="button" className={classes.login_with}>Login with Instagram</button>

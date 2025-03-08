@@ -58,8 +58,8 @@
 .regenerateButton {
     padding: 1vw 2vw;
     border: none;
-    background-color: #FCA311;
-    color: #14213D;
+    background-color: #007bff;
+    color: white;
     font-size: 1.2vw;
     border-radius: 3vw;
     cursor: pointer;
@@ -78,7 +78,7 @@
 /* Styling for captions */
 .caption {
     font-size: 4vw; /* Larger font size for caption */
-    color: #333;
+    color: #FCA311;
     font-weight: 500;
     margin: 2vw 0;
     text-align: center;
