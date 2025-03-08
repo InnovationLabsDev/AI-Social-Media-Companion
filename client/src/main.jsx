@@ -4,12 +4,14 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import App from './App.jsx';
 import FrontPage from './pages-website/frontPage.jsx';
+import MainPage from './pages-website/mainPage.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<FrontPage />} />
+        <Route path="/main-page" element={<MainPage />} />
         {/* <Route path="/app" element={<App />} /> */}
       </Routes>
     </BrowserRouter>
