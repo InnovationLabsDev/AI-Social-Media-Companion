@@ -77,3 +77,26 @@ input {
 .login_button:hover {
     background: #2563eb;
 }
+
+.login_register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    color: white
+}
+
+.register_button {
+    background: #3b82f6;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    width: 25vw;
+}
+
+.register_button>a {
+    color: white;
+}

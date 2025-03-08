@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import classes from '../../styles/loginForm.module.css';
+import RegistrationForm from './registrationForm';
+import { Route } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function LoginForm() {
     const [email, setEmail] = useState('');
@@ -30,7 +33,11 @@ function LoginForm() {
     return (
         <div className={classes.container}>
             <div className={classes.login_box}>
-                <h2>Login</h2>
+                <h2>
+                    <button className={classes.register_button}>
+                        <Link to="/registration">Register</Link>
+                    </button>
+                </h2>
                 {error && <p className={classes.error_message}>{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className={classes.input_group}>
