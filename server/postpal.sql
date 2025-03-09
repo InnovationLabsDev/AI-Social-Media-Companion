@@ -11,7 +11,7 @@ CREATE TABLE users (
 );
 
 INSERT INTO users (name, email, password, picture) 
-VALUES ('John Doe', 'john@example.com','$2b$10$0KgXeQ2CHW5uxxthxVAyF.oBZShxtlrWKJXOSjAtN5sigUKcqVMD6', LOAD_FILE('C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/background.jpg'));
+VALUES ('John Doe', 'john@example.com','$2b$10$0KgXeQ2CHW5uxxthxVAyF.oBZShxtlrWKJXOSjAtN5sigUKcqVMD6', LOAD_FILE('C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/meeting.jpg'));
 
 SHOW VARIABLES LIKE 'secure_file_priv';
 
@@ -24,7 +24,7 @@ CREATE TABLE photos (
 );
 
 INSERT INTO photos (user_id, photo) 
-VALUES (1, LOAD_FILE('C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/background.jpg'));
+VALUES (1, LOAD_FILE('C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/meeting.jpg'));
 
 
 
