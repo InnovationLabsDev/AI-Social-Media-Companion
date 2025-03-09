@@ -1,0 +1,61 @@
+/* Sidebar styles */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -300px; /* Initially hidden */
+    width: 250px;
+    height: 100vh;
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    transition: left 0.3s ease-in-out;
+  }
+  
+  /* Sidebar when open */
+  .sidebar.open {
+    left: 0;
+  }
+  
+  /* Sidebar when closed */
+  .sidebar.closed {
+    left: -300px;
+  }
+  
+  /* Sidebar buttons */
+  .menuButton {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .menuButton:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Toggle Button */
+  .toggleButton {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    z-index: 1000;
+  }
+  
+  .toggleButton:hover {
+    background-color: #0056b3;
+  }
+  
