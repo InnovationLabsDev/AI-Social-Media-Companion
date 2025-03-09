@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import classes from "../styles/mainPage.module.css";
+import { Link } from "react-router-dom";  // For routing links in the sidebar
+import classes from "../styles/mainPage.module.css";  // Assuming your styles are defined here
+import Sidebar from "./components/sideBar.jsx";  // Import the Sidebar component
 import { useEffect } from "react";
 
 function MainPage() {
@@ -8,7 +10,6 @@ function MainPage() {
     const [hashtags, setHashtags] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // Function to regenerate photo and automatically regenerate caption & hashtags
     const regeneratePhoto = () => {
         setPhoto(`https://picsum.photos/200/300?random=${Math.random()}`);
         regenerateCaption(); // Regenerăm și caption-ul la schimbarea pozei
@@ -37,7 +38,6 @@ function MainPage() {
     };
 
 
-    // Function to regenerate caption
     const regenerateCaption = () => {
         fetchCaptionsAndHashtags();
         const captions = [
@@ -51,17 +51,14 @@ function MainPage() {
         ];
         const randomCaption = captions[Math.floor(Math.random() * captions.length)];
         setCaption(randomCaption);
-        console.log("Caption Regenerated:", randomCaption);
     };
 
-    // Function to regenerate hashtags
     const regenerateHashtags = () => {
         const hashtagsArray = [
             "#Travel", "#Life", "#Nature", "#Inspiration", "#Photography",
             "#Adventure", "#Explore", "#Wanderlust", "#Love", "#Happiness",
             "#Motivation", "#PositiveVibes", "#Outdoor", "#PicOfTheDay"
         ];
-        // Selectăm aleator 3 hashtaguri
         const selectedHashtags = [];
         while (selectedHashtags.length < 3) {
             const randomHashtag = hashtagsArray[Math.floor(Math.random() * hashtagsArray.length)];
@@ -70,32 +67,33 @@ function MainPage() {
             }
         }
         setHashtags(selectedHashtags);
-        console.log("Hashtags Regenerated:", selectedHashtags);
     };
 
     return (
-        <div className={classes.container}>
-            <div className={classes.photoContainer}>
-                {photo ? (
-                    <img src={photo} alt="Generated" className={classes.photo} />
-                ) : (
-                    <div className={classes.placeholder}>Placeholder</div>
-                )}
-                <button onClick={regeneratePhoto} className={classes.regenerateButton}>Regenerate Photo</button>
-            </div>
-            <div className={classes.captionContainer}>
-                <p className={classes.caption}>{caption}</p>
-                {/* This button is optional now as caption is updated when photo changes */}
-                <button onClick={regenerateCaption} className={classes.regenerateButton}>Regenerate Caption</button>
-            </div>
-            <div className={classes.hashtagContainer}>
-                <div>
-                    {hashtags.map((hashtag, index) => (
-                        <span key={index} className={classes.hashtag}>{hashtag}</span>
-                    ))}
+        <div className={classes.mainPageContainer}>
+            {/* Main Content */}
+            <div className={classes.content}>
+                <Sidebar />
+                <div className={classes.photoContainer}>
+                    {photo ? (
+                        <img src={photo} alt="Generated" className={classes.photo} />
+                    ) : (
+                        <div className={classes.placeholder}>Placeholder</div>
+                    )}
+                    <button onClick={regeneratePhoto} className={classes.regenerateButton}>Regenerate Photo</button>
                 </div>
-                {/* This button is optional now as hashtags are updated when photo changes */}
-                <button onClick={regenerateHashtags} className={classes.regenerateButton}>Regenerate Hashtags</button>
+                <div className={classes.captionContainer}>
+                    <p className={classes.caption}>{caption}</p>
+                    <button onClick={regenerateCaption} className={classes.regenerateButton}>Regenerate Caption</button>
+                </div>
+                <div className={classes.hashtagContainer}>
+                    <div>
+                        {hashtags.map((hashtag, index) => (
+                            <span key={index} className={classes.hashtag}>{hashtag}</span>
+                        ))}
+                    </div>
+                    <button onClick={regenerateHashtags} className={classes.regenerateButton}>Regenerate Hashtags</button>
+                </div>
             </div>
         </div>
     );
