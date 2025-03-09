@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import classes from "../styles/mainPage.module.css";
+import { useEffect } from "react";
 
 function MainPage() {
     const [photo, setPhoto] = useState(null);
     const [caption, setCaption] = useState("This is a sample caption.");
     const [hashtags, setHashtags] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     // Function to regenerate photo and automatically regenerate caption & hashtags
     const regeneratePhoto = () => {
@@ -13,8 +15,31 @@ function MainPage() {
         regenerateHashtags(); // Regenerăm și hashtag-urile la schimbarea pozei
     };
 
+    const fetchCaptionsAndHashtags = async () => {
+        setLoading(true);
+        fetch("http://localhost:5000/caption")
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`HTTP error! Status: ${res.status}`);
+                }
+                return res.json();
+            })
+            .then(data => {
+                if (Array.isArray(data.captionArray) && Array.isArray(data.hashtags)) {
+                    setCaption(data.captionArray); // Change to `captionArray`
+                    setHashtags(data.hashtags);
+                } else {
+                    console.error("Invalid JSON structure:", data);
+                }
+            })
+            .catch(err => console.error("Error fetching captions and hashtags:", err))
+            .finally(() => setLoading(false));
+    };
+
+
     // Function to regenerate caption
     const regenerateCaption = () => {
+        fetchCaptionsAndHashtags();
         const captions = [
             "Exploring new places!",
             "What a wonderful day!",

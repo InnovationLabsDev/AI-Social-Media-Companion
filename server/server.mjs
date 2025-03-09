@@ -151,22 +151,59 @@ app.get('/caption', async (req, res) => {
 
         // Convert BLOB image to Base64
         const base64Image = rows[0].photo.toString('base64');
-        const imageData = `data:image/jpg;base64,${base64Image}`;
 
         // Google Gemini API Setup
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        const prompt = "Generate a creative social media caption with hashtags for this image.";
+        const prompt = "Generate a creative social media caption with 3-5 relevant hashtags for this image.";
         const imagePart = { inlineData: { data: base64Image, mimeType: "image/jpeg" } };
 
         const result = await model.generateContent([prompt, imagePart]);
-        const caption = result.response.text();
+        
+        // Extract response text
+        const responseText = result.response.text();
 
-        res.json({ caption });
+        // Ensure responseText is a valid string
+        if (!responseText) {
+            return res.status(500).json({ error: "Failed to generate caption, empty response from AI" });
+        }
+
+        // Extract hashtags from the response (basic split, might need regex refinement)
+        const hashtags = responseText.match(/#\w+/g) || [];
+        const hashtagsCount = hashtags.length;
+        
+        // const caption = responseText.replace(/#\w+/g, '').trim();
+        const caption = responseText.replace(/^Here.*?:.*?\"/s, '').trim();
+        // caption.replace("/^0-9/", '');
+        const captionArray = caption
+  .split('\n\n**Option')  // Split the caption into sections
+  .map(c => c.trim())     // Trim each section
+  .filter(c => c.length > 0)  // Remove any empty sections
+  .map(c => 
+    c
+      .replace(/#\w+/g, '')  // Remove hashtags
+      .replace(/^\d+\s?\(.+?\):\*\*\n?\n?"/, '')  // Remove options like "2 (More descriptive):**\n\n\""
+      .replace(/^\n{1,3}Here\s.*:.*$/s, '')  // Remove generic "Here are some options..." type of messages
+      .replace(/^[^a-zA-Z0-9]+/g, '') // Remove leading non-alphanumeric characters (like stray quotes or symbols)
+      .replace(/\n\n\nHere are some alternative captions, depending on the desired tone:"/g, '')  // Remove leading non-alphanumeric characters (like stray quotes or symbols)
+      .replace(/      \"\n\n\nHere are some alternative captions depending on the context:"/g, '')  // Remove leading non-alphanumeric characters (like stray quotes or symbols)
+      .replace(/     \"\n\n\nRemember to choose the caption that best fits your overall social media style and the audience you are trying to reach. You can also adjust the hashtags to better reflect the specific vehicle or context if known."/g, '')
+      .replace(/      \n\n\nRemember to choose the caption that best suits your overall social media style and target audience."/g, '')
+      .replace(/      \"\n\n\nRemember to choose the caption that best suits your brand and target audience.  You can also adjust the hashtags to better fit your specific content strategy."/g, '')
+      .replace(/\"\n\n\nRemember to choose the caption that best fits your brand and audience. You can also adapt these suggestions to your liking."/g, '')
+      .trim()  // Trim any remaining spaces
+  );
+
+        // Send JSON response
+        res.json({ 
+            captionArray, 
+            hashtags 
+        });
+
     } catch (error) {
         console.error("Error processing request:", error);
-        res.status(500).json({ error: "Failed to generate caption" });
+        res.status(500).json({ error: "Failed to generate caption", details: error.message });
     }
 });
 

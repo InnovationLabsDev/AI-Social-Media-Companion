@@ -6,7 +6,7 @@ import classes from '../../styles/loginForm.module.css';
 import axios from 'axios';
 import RegistrationForm from './registrationForm';
 import { Route } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 function LoginForm() {
     const [email, setEmail] = useState('');
