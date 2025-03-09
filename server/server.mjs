@@ -192,6 +192,8 @@ app.get('/caption', async (req, res) => {
       .replace(/      \n\n\nRemember to choose the caption that best suits your overall social media style and target audience."/g, '')
       .replace(/      \"\n\n\nRemember to choose the caption that best suits your brand and target audience.  You can also adjust the hashtags to better fit your specific content strategy."/g, '')
       .replace(/\"\n\n\nRemember to choose the caption that best fits your brand and audience. You can also adapt these suggestions to your liking."/g, '')
+      .replace(/\n{2,}Remember .*?\./g, '')
+
       .trim()  // Trim any remaining spaces
   );
 
