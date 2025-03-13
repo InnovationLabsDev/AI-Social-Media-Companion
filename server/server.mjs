@@ -251,6 +251,28 @@ app.get('/caption', async (req, res) => {
 //     }
 // });
 
+const fetchMeetingImage = async () => {
+    setLoading(true);
+    
+    fetch("http://localhost:5000/users")
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! Status: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (data.image) {
+                setPhoto(data.image); // Set Base64 image as source
+            } else {
+                console.error("No image found");
+            }
+        })
+        .catch(err => console.error("Error fetching image:", err))
+        .finally(() => setLoading(false));
+};
+
+
 // Start server
 const PORT = 5000;
 app.listen(PORT, () => {
