@@ -1,5 +1,8 @@
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
 /* 🌟 Main Container */
-.login-container {
+.login_container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -8,20 +11,20 @@
     width: 100vw;
     background-color: #0b1d3d;
     color: white;
-    font-family: Kasei Decol;
+    font-family: 'Roboto', sans-serif; /* Everything is Roboto */
 }
 
 /* 🏷️ Logo */
 .logo {
     font-size: 48px;
-    font-weight:normal;
+    font-weight: normal;
     margin-bottom: 15px;
-    color: #f5a623;
-    font: Kasei Decol;
+    color: #fca311;
+    font-family: 'Kasei Decol'; /* Title stays in Kasei Decol */
 }
 
 /* 🟠 Profile Picture */
-.profile-icon {
+.profile_icon {
     width: 70px;
     height: 70px;
     border-radius: 50%;
@@ -32,7 +35,7 @@
     margin-bottom: 15px;
 }
 
-.profile-icon img {
+.profile_icon img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -40,7 +43,7 @@
 }
 
 /* 🖊️ Input Fields */
-.input-group {
+.input_group {
     display: flex;
     align-items: center;
     background: #6B818C;
@@ -50,20 +53,38 @@
     width: 280px;
 }
 
-.input-group .icon {
+.input_group .icon {
     color: white;
     margin-right: 8px;
 }
 
-.input-group input {
+.input_group input {
     border: none;
     outline: none;
     background: none;
     color: white;
     width: 100%;
+    font-family: 'Roboto', sans-serif;
+}
+
+.input_group input::placeholder {
+    color: #14213d;
+    font-family: 'Roboto', sans-serif;
 }
 
 /* ✅ Remember Me & Forgot Password */
+.remember_forgot {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center both elements */
+    gap: 10px; /* Adjust spacing */
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #bbb;
+    font-weight: normal;
+}
+
 .switch {
     position: relative;
     display: inline-block;
@@ -102,42 +123,54 @@
 }
 
 .switch input:checked + .slider {
-    background-color: #21cc4c;
+    background-color: #fca311;
 }
 
 .switch input:checked + .slider:before {
     transform: translateX(20px);
 }
 
+.forgot_password {
+    color: #bbb;
+    text-decoration: none;
+    margin-left: 22px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: normal;
+    text-decoration: underline;
+}
+
 /* 🔑 Login Button */
-.login-button {
-    background: #f5a623;
+.login_button {
+    background: #fca311;
     color: #14213d;
     padding: 12px;
-    width: 280px;
+    width: 160px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
-    margin-bottom: 15px;
+    margin-top: 10px;
+    margin-bottom: 5px;
     transition: background 0.3s;
+    font-family: 'Roboto', sans-serif;
 }
 
-.login-button:hover {
+.login_button:hover {
     background: #d48c1d;
 }
 
 /* OR Divider */
-.or-divider {
+.or_divider {
     text-align: center;
     margin: 10px 0;
     width: 280px;
     font-size: 14px;
     color: #bbb;
+    font-family: 'Roboto', sans-serif;
 }
 
 /* 🌐 Social Login Buttons */
-.social-login {
+.social_login {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -147,11 +180,34 @@
     font-size: 16px;
     cursor: pointer;
     margin-bottom: 10px;
+    margin-top: 10px;
     border: none;
     transition: transform 0.2s ease-in-out;
+    font-family: 'Roboto', sans-serif;
 }
 
-.social-login:hover {
+/* OR Divider with Horizontal Lines */
+.or_divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 400px;
+    font-size: 14px;
+    color: #fca311;
+    font-family: 'Roboto', sans-serif;
+    margin: 15px;
+}
+
+.or_divider::before,
+.or_divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: #bbb;
+    margin: 0 10px;
+}
+
+.social_login:hover {
     transform: scale(1.05);
 }
 
@@ -162,18 +218,21 @@
 
 .facebook {
     background: #1877f2;
+    color: white;
 }
 
 .linkedin {
     background: #0077b5;
+    color: white;
 }
 
 /* 📜 Terms */
 .terms {
     text-align: center;
     font-size: 12px;
-    width: 280px;
+    width: 350px;
     margin-top: 15px;
+    font-family: 'Roboto', sans-serif;
 }
 
 .terms a {

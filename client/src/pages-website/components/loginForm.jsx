@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaUser, FaLock } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook, FaLinkedin } from 'react-icons/fa';
-import styles from '../../styles/loginForm.module.css';
+import classes from '../../styles/loginForm.module.css';
 
 function LoginForm() {
     const [username, setUsername] = useState('');
@@ -22,19 +22,19 @@ function LoginForm() {
     };
 
     return (
-        <div className={styles["login-container"]}>
-            <h1 className={styles.logo}>PostPal ✈️</h1>
+        <div className={classes.login_container}>
+            <h1 className={classes.logo}>PostPal 🚀</h1>
 
             {/* Round profile image */}
-            <div className={styles["profile-icon"]}>
+            <div className={classes.profile_icon}>
                 <img src="/profile-placeholder.png" alt="Profile" />
             </div>
 
-            {error && <p className={styles["error-message"]}>{error}</p>}
+            {error && <p className={classes.error_message}>{error}</p>}
 
             <form onSubmit={handleSubmit}>
-                <div className={styles["input-group"]}>
-                    <FaUser className={styles.icon} />
+                <div className={classes.input_group}>
+                    <FaUser className={classes.icon} />
                     <input
                         type="text"
                         placeholder="Username"
@@ -42,8 +42,8 @@ function LoginForm() {
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </div>
-                <div className={styles["input-group"]}>
-                    <FaLock className={styles.icon} />
+                <div className={classes.input_group}>
+                    <FaLock className={classes.icon} />
                     <input
                         type="password"
                         placeholder="Password"
@@ -52,37 +52,40 @@ function LoginForm() {
                     />
                 </div>
 
-                <div className={styles["remember-forgot"]}>
-                    <label className={styles.switch}>
+                <div className={classes.remember_forgot}>
+                    <label className={classes.switch}>
                         <input
                             type="checkbox"
                             checked={rememberMe}
                             onChange={() => setRememberMe(!rememberMe)}
                         />
-                        <span className={styles.slider}></span>
+                        <span className={classes.slider}></span>
                     </label>
-                    <span>Remember me</span>
-                    <Link to="/forgot-password" className={styles["forgot-password"]}>
+                    <span className={classes.remember}> Remember me</span>
+                    <Link to="/forgot-password" className={classes.forgot_password}>
                         Forgot password?
                     </Link>
                 </div>
 
-                <button type="submit" className={styles["login-button"]}>Login</button>
+                <button type="submit" className={classes.login_button}>Login</button>
             </form>
 
-            <div className={styles["or-divider"]}>or</div>
+            <div className={classes.or_divider}>or</div>
 
-            <button className={`${styles["social-login"]} ${styles.google}`}>
-                <FcGoogle /> Continue with Google
-            </button>
-            <button className={`${styles["social-login"]} ${styles.facebook}`}>
+            <button className={`${classes.social_login} ${classes.facebook}`}>
                 <FaFacebook /> Continue with Facebook
             </button>
-            <button className={`${styles["social-login"]} ${styles.linkedin}`}>
+
+            <button className={`${classes.social_login} ${classes.linkedin}`}>
                 <FaLinkedin /> Continue with LinkedIn
             </button>
 
-            <p className={styles.terms}>
+            <button className={`${classes.social_login} ${classes.google}`}>
+                <FcGoogle /> Continue with Google
+            </button>
+            
+
+            <p className={classes.terms}>
                 By clicking continue, you agree to our <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>.
             </p>
         </div>
