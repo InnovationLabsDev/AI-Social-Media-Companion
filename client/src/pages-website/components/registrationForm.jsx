@@ -12,6 +12,7 @@ function RegistrationForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (!email || !password || !retypePassword || !name) {
             setError('All fields are required');
             return;
@@ -21,7 +22,6 @@ function RegistrationForm() {
             return;
         }
         setError('');
-        // alert('Registration successful');
 
         try {
             const response = await axios.post("http://localhost:5000/register", { email, password, name });
@@ -45,6 +45,8 @@ function RegistrationForm() {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
+                    </div>
+                    <div className={classes.input_group}>
                         <label>Email</label>
                         <input
                             type="email"
@@ -71,9 +73,7 @@ function RegistrationForm() {
                             onChange={(e) => setRetypePassword(e.target.value)}
                         />
                     </div>
-                    <button type="submit" className={classes.register_button}>
-                        Register
-                    </button>
+                    <button type="submit" className={classes.register_button}>Register</button>
                 </form>
                 <Link to="/" className={classes.login_link}>Already have an account? Login</Link>
             </div>
