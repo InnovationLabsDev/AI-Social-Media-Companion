@@ -6,6 +6,7 @@ import classes from '../../styles/loginForm.module.css';
 import axios from 'axios';
 import RegistrationForm from './registrationForm';
 import { Route } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 // import { Link } from 'react-router-dom';
 
 function LoginForm() {
@@ -33,6 +34,8 @@ function LoginForm() {
 
     /////////////////////////////
 
+    const navigate = useNavigate(); // Hook for navigation
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -43,8 +46,26 @@ function LoginForm() {
             setIsLoading(false);
             return;
         }
-        setError("");
-        //alert("Login successful");
+
+        try {
+            const response = await axios.post("http://localhost:5000/", {
+                email,
+                password
+            });
+
+            console.log(response.data); // Debugging
+
+            if (response.data.message === "Login successful") {
+                navigate("/main-page");
+            } else {
+                setError("Invalid email or password");
+            }
+        } catch (err) {
+            setError("Invalid email or password");
+            console.error("Login error:", err);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleFacebookSuccess = (response) => {
@@ -85,7 +106,7 @@ function LoginForm() {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-                    <Link to={"/main-page"}><button type="submit" className={classes.login_button}>Login</button></Link>
+                    <button type="submit" className={classes.login_button}>Login</button>
                     <button type="button" className={classes.login_with} onClick={() => handleLoginWith("SAlut")}>Login with FaceBook</button>
                     <button type="button" className={classes.login_with}>Login with LinkedIn</button>
                     <button type="button" className={classes.login_with}>Login with Instagram</button>
