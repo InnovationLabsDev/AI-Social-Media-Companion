@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import axios from 'axios';
 import { GoogleGenerativeAI} from '@google/generative-ai';
+import multer from 'multer';
+import cloudinary from 'cloudinary';
 
 import User from './models/User.mjs'; 
 import Photo from './models/Photo.mjs';
@@ -14,12 +16,82 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+// const url = cloudinary.url('cld-sample-5', {
+//     transformation: [
+//         {
+//             quality: 'auto',
+//         },
+//         {
+//             fetch_format: 'auto',
+//         }
+//     ]
+// });
+// console.log(url);
+
+// (async function() {
+//     const results = await cloudinary.uploader.upload('../client/public/team_work.jpg');
+//     console.log(results);
+//     const url = cloudinary.url(results.public_id, {
+//         transformation: [
+//             {
+//                 quality: 'auto',
+//                 fetch_format: 'auto'
+//             },
+//             {
+//                 width: 300,
+//                 height: 300,
+//                 crop: 'fill',
+//                 gravity: 'auto'
+//             }
+//         ]
+//     });
+//     console.log(url);
+// })();
+
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => console.log("✅ Connected to MongoDB Atlas"))
 .catch(err => console.error("❌ MongoDB Connection Error:", err));
+
+const storage = multer.memoryStorage(); // Store files in memory (for Cloudinary streaming)
+const upload = multer({ storage: storage }); // Initialize multer with memory storage
+
+app.post('/main-page', upload.single('file'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+  
+      // Upload to Cloudinary
+      const result = await cloudinary.uploader.upload_stream(
+        { resource_type: 'auto' },
+        async (error, result) => {
+          if (error) {
+            return res.status(500).json({ message: 'Error uploading to Cloudinary', error });
+          }
+  
+          // Return the image URL to the client
+          res.json({
+            imageUrl: result.secure_url
+          });
+        }
+      );
+      
+      // Pipe the file buffer to Cloudinary's upload stream
+      result.end(req.file.buffer);
+    } catch (error) {
+      console.error('Error handling file upload:', error);
+      res.status(500).json({ message: 'Error processing the file', error });
+    }
+  });
 
 // Registration route
 app.post('/register', async (req, res) => {
@@ -81,7 +153,6 @@ app.post('/', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
-
 
 // Start the server
 app.listen(5000, () => console.log("🚀 Server running on port 5000"));
