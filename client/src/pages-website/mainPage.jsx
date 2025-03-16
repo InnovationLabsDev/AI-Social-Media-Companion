@@ -1,79 +1,115 @@
 import React, { useState } from "react";
 import classes from "../styles/mainPage.module.css";
+import { FaRegUserCircle } from "react-icons/fa";
+import { FiRefreshCcw } from "react-icons/fi";
+import { FaInstagram, FaFacebookF, FaLinkedinIn, FaXTwitter, FaPinterest } from "react-icons/fa6";
 
-function MainPage() {
+const MainPage = () => {
     const [photo, setPhoto] = useState(null);
-    const [caption, setCaption] = useState("This is a sample caption.");
-    const [hashtags, setHashtags] = useState([]);
+    const [caption, setCaption] = useState("Prepping for a brainstorming session with the creative team about our next campaign.");
+    const [hashtags, setHashtags] = useState(["#design", "#tech", "#development", "#vision", "#meeting"]);
+    const [selectedPlatforms, setSelectedPlatforms] = useState([]);
 
-    // Function to regenerate photo and automatically regenerate caption & hashtags
     const regeneratePhoto = () => {
-        setPhoto(`https://picsum.photos/200/300?random=${Math.random()}`);
-        regenerateCaption(); // Regenerăm și caption-ul la schimbarea pozei
-        regenerateHashtags(); // Regenerăm și hashtag-urile la schimbarea pozei
+        setPhoto(`https://picsum.photos/300/300?random=${Math.random()}`);
     };
 
-    // Function to regenerate caption
     const regenerateCaption = () => {
         const captions = [
             "Exploring new places!",
             "What a wonderful day!",
-            "Feeling inspired today!",
-            "Adventure awaits!",
-            "Let's make today amazing!",
-            "Enjoying the little things.",
-            "Life is beautiful!"
+            "Prepping for a brainstorming session with the creative team about our next campaign."
         ];
-        const randomCaption = captions[Math.floor(Math.random() * captions.length)];
-        setCaption(randomCaption);
-        console.log("Caption Regenerated:", randomCaption);
+        setCaption(captions[Math.floor(Math.random() * captions.length)]);
     };
 
-    // Function to regenerate hashtags
     const regenerateHashtags = () => {
-        const hashtagsArray = [
-            "#Travel", "#Life", "#Nature", "#Inspiration", "#Photography",
-            "#Adventure", "#Explore", "#Wanderlust", "#Love", "#Happiness",
-            "#Motivation", "#PositiveVibes", "#Outdoor", "#PicOfTheDay"
-        ];
-        // Selectăm aleator 3 hashtaguri
-        const selectedHashtags = [];
-        while (selectedHashtags.length < 3) {
-            const randomHashtag = hashtagsArray[Math.floor(Math.random() * hashtagsArray.length)];
-            if (!selectedHashtags.includes(randomHashtag)) {
-                selectedHashtags.push(randomHashtag);
-            }
-        }
-        setHashtags(selectedHashtags);
-        console.log("Hashtags Regenerated:", selectedHashtags);
+        const hashtagsArray = ["#design", "#tech", "#development", "#vision", "#meeting"];
+        setHashtags(hashtagsArray.sort(() => 0.5 - Math.random()).slice(0, 5));
+    };
+
+    const togglePlatformSelection = (platform) => {
+        setSelectedPlatforms((prev) =>
+            prev.includes(platform) ? prev.filter((p) => p !== platform) : [...prev, platform]
+        );
     };
 
     return (
         <div className={classes.container}>
-            <div className={classes.photoContainer}>
-                {photo ? (
-                    <img src={photo} alt="Generated" className={classes.photo} />
-                ) : (
-                    <div className={classes.placeholder}>Placeholder</div>
-                )}
-                <button onClick={regeneratePhoto} className={classes.regenerateButton}>Regenerate Photo</button>
+            {/* Header */}
+            <div className={classes.header}>
+                <h1 className={classes.appTitle}>PostPal 🚀</h1>
+                <FaRegUserCircle className={classes.userIcon} />
             </div>
-            <div className={classes.captionContainer}>
-                <p className={classes.caption}>{caption}</p>
-                {/* This button is optional now as caption is updated when photo changes */}
-                <button onClick={regenerateCaption} className={classes.regenerateButton}>Regenerate Caption</button>
+
+            {/* Post Card */}
+            <div className={classes.postCard}>
+                {/* User Info */}
+                <div className={classes.userInfo}>
+                    <FaRegUserCircle className={classes.userAvatar} />
+                    <div>
+                        <p className={classes.username}>@johnmaina</p>
+                        <p className={classes.location}>📍 3890 Poplar Dr.</p>
+                    </div>
+                </div>
+
+                {/* Post Image with Refresh Button */}
+                <div className={classes.photoContainer}>
+                    <img src={photo || "https://picsum.photos/300/300"} alt="Generated" className={classes.photo} />
+                    <button onClick={regeneratePhoto} className={classes.refreshPhotoButton}>
+                        <FiRefreshCcw />
+                    </button>
+                </div>
+
+                {/* Caption & Hashtags */}
+                <div className={classes.captionRow}>
+                    <p className={classes.caption}>{caption}</p>
+                    <button onClick={regenerateCaption} className={classes.refreshButton}>
+                        <FiRefreshCcw />
+                    </button>
+                </div>
+
+                <div className={classes.hashtagContainer}>
+                    {hashtags.map((tag, index) => (
+                        <span key={index} className={classes.hashtag}>{tag}</span>
+                    ))}
+                    <button onClick={regenerateHashtags} className={classes.refreshButton}>
+                        <FiRefreshCcw />
+                    </button>
+                </div>
             </div>
-            <div className={classes.hashtagContainer}>
-                <div>
-                    {hashtags.map((hashtag, index) => (
-                        <span key={index} className={classes.hashtag}>{hashtag}</span>
+
+            {/* Platform Selection */}
+            <div className={classes.platformSelection}>
+                <p className={classes.platformTitle}>Choose platform</p>
+                <div className={classes.platformIcons}>
+                    {[
+                        { name: "Instagram", icon: <FaInstagram /> },
+                        { name: "Facebook", icon: <FaFacebookF /> },
+                        { name: "LinkedIn", icon: <FaLinkedinIn /> },
+                        { name: "Twitter", icon: <FaXTwitter /> },
+                        { name: "Pinterest", icon: <FaPinterest /> },
+                    ].map((platform) => (
+                        <div
+                            key={platform.name}
+                            className={`${classes.platformIcon} ${
+                                selectedPlatforms.includes(platform.name) ? classes.selectedPlatform : ""
+                            }`}
+                            onClick={() => togglePlatformSelection(platform.name)}
+                        >
+                            {platform.icon}
+                        </div>
                     ))}
                 </div>
-                {/* This button is optional now as hashtags are updated when photo changes */}
-                <button onClick={regenerateHashtags} className={classes.regenerateButton}>Regenerate Hashtags</button>
+
+                {/* Buttons */}
+                <div className={classes.buttonGroup}>
+                    <button className={classes.declineButton}>Decline</button>
+                    <button className={classes.acceptButton}>Accept and Share</button>
+                </div>
             </div>
         </div>
     );
-}
+};
 
 export default MainPage;
