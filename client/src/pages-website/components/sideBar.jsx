@@ -21,7 +21,7 @@ function Sidebar() {
     <>
       {/* 🔹 Toggle Button */}
       <button onClick={toggleSidebar} className={styles.toggleButton}>
-        {isOpen ? "X" : "☰ Open Menu"}
+        {isOpen ? "X" : "☰ "}
       </button>
 
       {/* 🔹 Sidebar (randează doar dacă `isOpen` este true) */}
