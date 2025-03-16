@@ -2,7 +2,11 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import User from './models/User.mjs'; // Import the User model
+import axios from 'axios';
+import { GoogleGenerativeAI} from '@google/generative-ai';
+
+import User from './models/User.mjs'; 
+import Photo from './models/Photo.mjs';
 
 dotenv.config();
 
