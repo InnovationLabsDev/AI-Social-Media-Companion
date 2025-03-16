@@ -1,4 +1,4 @@
-/* 🔹 Sidebar hidden by default */
+/* 🔹 Sidebar ascuns inițial */
 .sidebar {
   position: fixed;
   top: 0;
@@ -17,14 +17,55 @@
   transition: transform 0.3s ease-in-out, opacity 0.2s ease-in-out;
 }
 
-/* 🔹 When sidebar is open */
+/* 🔹 Când meniul este deschis */
 .sidebar.open {
   display: flex;  /* Apare doar când este deschis */
   transform: translateX(0);
   opacity: 1;
 }
 
-/* 🔹 Sidebar buttons */
+/* 🔹 Buton pentru DESCHIDEREA meniului */
+.openButton {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background-color: white;
+  color: black;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 20px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.openButton:hover {
+  background-color: lightgray;
+}
+
+/* 🔹 Buton pentru ÎNCHIDEREA meniului */
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background-color: white;
+  color: black;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
+}
+
+.closeButton:hover {
+  background-color: lightgray;
+}
+
+/* 🔹 Stiluri pentru butoanele din meniu */
 .menuButton {
   width: 90%;
   padding: 12px;
@@ -43,26 +84,4 @@
 
 .menuButton:hover {
   background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* 🔹 Toggle Button */
-.toggleButton {
-  position: fixed;
-  top: 20px;
-  //left: 20px;
-  right: 100px;
-  background-color: white;
-  color: black;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  font-size: 20px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-}
-
-.toggleButton:hover {
-  background-color: lightgray;
 }

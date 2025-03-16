@@ -6,27 +6,39 @@ function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Funcție pentru a deschide/închide meniul
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+  // Funcție pentru a deschide meniul
+  const openSidebar = () => {
+    setIsOpen(true);
+  };
+
+  // Funcție pentru a închide meniul
+  const closeSidebar = () => {
+    setIsOpen(false);
   };
 
   // Navigare și închidere automată a meniului
   const handleNavigation = (path) => {
     navigate(path);
-    setIsOpen(false);
+    closeSidebar(); // Închide meniul după navigare
   };
 
   return (
     <>
-      {/* 🔹 Toggle Button */}
-      <button onClick={toggleSidebar} className={styles.toggleButton}>
-        {isOpen ? "X" : "☰ "}
-      </button>
+      {/* 🔹 Buton pentru DESCHIDERE meniului (vizibil doar când e închis) */}
+      {!isOpen && (
+        <button onClick={openSidebar} className={styles.openButton}>
+          ☰
+        </button>
+      )}
 
-      {/* 🔹 Sidebar (randează doar dacă `isOpen` este true) */}
+      {/* 🔹 Sidebar */}
       {isOpen && (
         <div className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
+          {/* 🔹 Buton pentru ÎNCHIDERE meniului (vizibil doar când e deschis) */}
+          <button onClick={closeSidebar} className={styles.closeButton}>
+            ✖
+          </button>
+
           <button onClick={() => handleNavigation("/")} className={styles.menuButton}>
             🏠 Home
           </button>
