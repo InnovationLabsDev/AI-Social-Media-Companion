@@ -9,6 +9,7 @@ import cloudinary from 'cloudinary';
 
 import User from './models/User.mjs'; 
 import Photo from './models/Photo.mjs';
+import { uploadToCloudinary } from './models/cloudinaryService.mjs';
 
 dotenv.config();
 
@@ -24,38 +25,6 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// const url = cloudinary.url('cld-sample-5', {
-//     transformation: [
-//         {
-//             quality: 'auto',
-//         },
-//         {
-//             fetch_format: 'auto',
-//         }
-//     ]
-// });
-// console.log(url);
-
-// (async function() {
-//     const results = await cloudinary.uploader.upload('../client/public/team_work.jpg');
-//     console.log(results);
-//     const url = cloudinary.url(results.public_id, {
-//         transformation: [
-//             {
-//                 quality: 'auto',
-//                 fetch_format: 'auto'
-//             },
-//             {
-//                 width: 300,
-//                 height: 300,
-//                 crop: 'fill',
-//                 gravity: 'auto'
-//             }
-//         ]
-//     });
-//     console.log(url);
-// })();
-
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -66,19 +35,9 @@ mongoose.connect(process.env.MONGO_URI, {
 const storage = multer.memoryStorage(); // Store files in memory (for Cloudinary streaming)
 const upload = multer({ storage: storage }); // Initialize multer with memory storage
 
-// Create basic routes
-app.get('/', (req, res) => {
-    res.send("Hello, World!");
-});
-
-// app.get('/main-page', async (req, res) => {
-//     try {
-//         const photo = await Photo.findOne();
-//         res.json(photo);
-//     } catch (err) {
-//         console.error("Error fetching photo:", err);
-//         res.status(500).json({ error: 'Server error' });
-//     }
+// // Create basic routes
+// app.get('/', (req, res) => {
+//     res.send("Hello, World!");
 // });
 
 app.post('/main-page', upload.single('file'), async (req, res) => {
@@ -88,22 +47,9 @@ app.post('/main-page', upload.single('file'), async (req, res) => {
     }
 
     // Upload to Cloudinary
-    const result = await new Promise((resolve, reject) => {
-      cloudinary.v2.uploader.upload_stream(
-        { resource_type: 'auto' },
-        (error, uploadResult) => {
-          if (error) {
-            return reject(error);
-          }
-          resolve(uploadResult);
-        }
-      ).end(req.file.buffer);
-    });
+    const result = await uploadToCloudinary(req.file.buffer);
 
-    console.log(result);
-
-    // Now you can use the result.secure_url
-    // const fileUrl = result.secure_url;
+    // console.log(result);
     
     // Example transformation on the uploaded image
     const url = cloudinary.url(result.public_id, {
