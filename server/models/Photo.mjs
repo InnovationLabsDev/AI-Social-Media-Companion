@@ -6,6 +6,7 @@ const photoSchema = new mongoose.Schema({
     url: { type: String, required: true },
     caption: { type: Array, required: true},
     hashtags: { type: Array, required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 }, { timestamps: true });
 
 const Photo = mongoose.model("Photo", photoSchema);

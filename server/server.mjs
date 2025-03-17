@@ -16,6 +16,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+let userId = null;
+
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -69,15 +71,15 @@ app.get('/', (req, res) => {
     res.send("Hello, World!");
 });
 
-app.get('/main-page', async (req, res) => {
-    try {
-        const photo = await Photo.findOne();
-        res.json(photo);
-    } catch (err) {
-        console.error("Error fetching photo:", err);
-        res.status(500).json({ error: 'Server error' });
-    }
-});
+// app.get('/main-page', async (req, res) => {
+//     try {
+//         const photo = await Photo.findOne();
+//         res.json(photo);
+//     } catch (err) {
+//         console.error("Error fetching photo:", err);
+//         res.status(500).json({ error: 'Server error' });
+//     }
+// });
 
 app.post('/main-page', upload.single('file'), async (req, res) => {
   try {
@@ -113,17 +115,24 @@ app.post('/main-page', upload.single('file'), async (req, res) => {
 
     console.log('Generated URL with transformations:', url);
 
-    // const photo = new Photo({
-    //     title: req.body.title || 'Untitled',
-    //     url: url,
-    //     caption: req.body.caption || [],
-    //     hashtags: req.body.hashtags || []
-    // });
+    const photo = new Photo({
+        title: req.body.title || req.file.originalname,
+        url: url,
+        caption: req.body.caption || [],
+        hashtags: req.body.hashtags || [],
+        user: userId,
+    });
 
-    // await photo.save();
+    await photo.save();
 
     // Respond with the Cloudinary URL (optional)
-    res.status(200).json({ message: 'File uploaded to Cloudinary', url });
+    res.status(200).json({
+      message: 'File uploaded to Cloudinary',
+      title: req.file.originalname,
+      user: userId,
+      url 
+    });
+
   } catch (error) {
     console.error('Error handling file upload:', error);
     res.status(500).json({ message: 'Error processing the file', error });
@@ -186,6 +195,7 @@ app.post('/', async (req, res) => {
 
         // Return success message or JWT here (if using JWT)
         res.json({ message: 'Login successful', userId: user._id });
+        userId = user._id;
     } catch (err) {
         console.error("Login error:", err);
         res.status(500).json({ error: 'Server error' });
