@@ -64,34 +64,72 @@ mongoose.connect(process.env.MONGO_URI, {
 const storage = multer.memoryStorage(); // Store files in memory (for Cloudinary streaming)
 const upload = multer({ storage: storage }); // Initialize multer with memory storage
 
-app.post('/main-page', upload.single('file'), async (req, res) => {
+// Create basic routes
+app.get('/', (req, res) => {
+    res.send("Hello, World!");
+});
+
+app.get('/main-page', async (req, res) => {
     try {
-      if (!req.file) {
-        return res.status(400).json({ message: 'No file uploaded' });
-      }
-  
-      // Upload to Cloudinary
-      const result = await cloudinary.uploader.upload_stream(
-        { resource_type: 'auto' },
-        async (error, result) => {
-          if (error) {
-            return res.status(500).json({ message: 'Error uploading to Cloudinary', error });
-          }
-  
-          // Return the image URL to the client
-          res.json({
-            imageUrl: result.secure_url
-          });
-        }
-      );
-      
-      // Pipe the file buffer to Cloudinary's upload stream
-      result.end(req.file.buffer);
-    } catch (error) {
-      console.error('Error handling file upload:', error);
-      res.status(500).json({ message: 'Error processing the file', error });
+        const photo = await Photo.findOne();
+        res.json(photo);
+    } catch (err) {
+        console.error("Error fetching photo:", err);
+        res.status(500).json({ error: 'Server error' });
     }
-  });
+});
+
+app.post('/main-page', upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    // Upload to Cloudinary
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.v2.uploader.upload_stream(
+        { resource_type: 'auto' },
+        (error, uploadResult) => {
+          if (error) {
+            return reject(error);
+          }
+          resolve(uploadResult);
+        }
+      ).end(req.file.buffer);
+    });
+
+    console.log(result);
+
+    // Now you can use the result.secure_url
+    // const fileUrl = result.secure_url;
+    
+    // Example transformation on the uploaded image
+    const url = cloudinary.url(result.public_id, {
+      transformation: [
+        { quality: 'auto' },
+        { fetch_format: 'auto' }
+      ]
+    });
+
+    console.log('Generated URL with transformations:', url);
+
+    // const photo = new Photo({
+    //     title: req.body.title || 'Untitled',
+    //     url: url,
+    //     caption: req.body.caption || [],
+    //     hashtags: req.body.hashtags || []
+    // });
+
+    // await photo.save();
+
+    // Respond with the Cloudinary URL (optional)
+    res.status(200).json({ message: 'File uploaded to Cloudinary', url });
+  } catch (error) {
+    console.error('Error handling file upload:', error);
+    res.status(500).json({ message: 'Error processing the file', error });
+  }
+});
+
 
 // Registration route
 app.post('/register', async (req, res) => {

@@ -114,6 +114,8 @@ const MainPage = () => {
 
             const data = await response.json();
 
+            console.log(data);
+
             if (response.ok) {
                 const imageUrl = data.imageUrl; // Get the uploaded image URL
                 setPhoto(imageUrl); // Update the photo state with the image URL
