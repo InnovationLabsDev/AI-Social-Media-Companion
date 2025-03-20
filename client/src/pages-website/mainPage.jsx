@@ -15,60 +15,61 @@ const MainPage = () => {
     const [selectedPlatforms, setSelectedPlatforms] = useState([]);
     const [loading, setLoading] = useState(false);
     const [file, setFile] = useState(null);
+    const userId = localStorage.getItem("userId");
 
-    useEffect(() => {
-        // Fetch captions and hashtags on component mount
-        fetchCaptions();
-        fetchHashtags();
-    }, []);
+    // useEffect(() => {
+    //     // Fetch captions and hashtags on component mount
+    //     fetchCaptions();
+    //     fetchHashtags();
+    // }, []);
 
-    // Function to shuffle an array
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]]; // Swap elements
-        }
-        return array;
-    }
+    // // Function to shuffle an array
+    // function shuffleArray(array) {
+    //     for (let i = array.length - 1; i > 0; i--) {
+    //         const j = Math.floor(Math.random() * (i + 1));
+    //         [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    //     }
+    //     return array;
+    // }
 
-    const fetchCaptions = async () => {
-        setLoading(true);
-        try {
-            const res = await fetch("http://localhost:5000/caption");
-            if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-            const data = await res.json();
-            if (Array.isArray(data.captionArray)) {
-                setAllCaptions(data.captionArray);
-                const shuffledCaptions = shuffleArray(data.captionArray);
-                setCaption(shuffledCaptions[0]); // Select random caption
-            } else {
-                console.error("Invalid JSON structure:", data);
-            }
-        } catch (err) {
-            console.error("Error fetching captions:", err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    // const fetchCaptions = async () => {
+    //     setLoading(true);
+    //     try {
+    //         const res = await fetch("http://localhost:5000/caption");
+    //         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+    //         const data = await res.json();
+    //         if (Array.isArray(data.captionArray)) {
+    //             setAllCaptions(data.captionArray);
+    //             const shuffledCaptions = shuffleArray(data.captionArray);
+    //             setCaption(shuffledCaptions[0]); // Select random caption
+    //         } else {
+    //             console.error("Invalid JSON structure:", data);
+    //         }
+    //     } catch (err) {
+    //         console.error("Error fetching captions:", err);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
-    const fetchHashtags = async () => {
-        setLoading(true);
-        try {
-            const res = await fetch("http://localhost:5000/hashtags");
-            if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-            const data = await res.json();
-            if (Array.isArray(data.hashtags)) {
-                const shuffledHashtags = shuffleArray(data.hashtags);
-                setHashtags(shuffledHashtags.slice(0, 3)); // Select top 3 hashtags
-            } else {
-                console.error("Invalid JSON structure:", data);
-            }
-        } catch (err) {
-            console.error("Error fetching hashtags:", err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    // const fetchHashtags = async () => {
+    //     setLoading(true);
+    //     try {
+    //         const res = await fetch("http://localhost:5000/hashtags");
+    //         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+    //         const data = await res.json();
+    //         if (Array.isArray(data.hashtags)) {
+    //             const shuffledHashtags = shuffleArray(data.hashtags);
+    //             setHashtags(shuffledHashtags.slice(0, 3)); // Select top 3 hashtags
+    //         } else {
+    //             console.error("Invalid JSON structure:", data);
+    //         }
+    //     } catch (err) {
+    //         console.error("Error fetching hashtags:", err);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     const regeneratePhoto = () => {
         setPhoto(`https://picsum.photos/300/300?random=${Math.random()}`); // Regenerate random photo
@@ -87,6 +88,26 @@ const MainPage = () => {
         fetchHashtags(); // Fetch new hashtags
     };
 
+    useEffect(() => {
+        if (!userId) {
+            console.error("User ID not found!");
+            return;
+        }
+
+        const fetchLastPhoto = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/last-photo/${userId}`);
+                if (!response.ok) throw new Error("Failed to fetch last photo");
+
+                const data = await response.json();
+                setPhoto(data.url);
+            } catch (error) {
+                console.error("Error fetching last photo:", error);
+            }
+        };
+
+        fetchLastPhoto();
+    }, [userId]);
     const togglePlatformSelection = (platform) => {
         setSelectedPlatforms((prev) =>
             prev.includes(platform) ? prev.filter((p) => p !== platform) : [...prev, platform]

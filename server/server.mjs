@@ -139,14 +139,43 @@ app.post('/', async (req, res) => {
             return res.status(401).json({ error: 'Invalid email or password' });
         }
 
+        userId = user._id;
         // Return success message or JWT here (if using JWT)
         res.json({ message: 'Login successful', userId: user._id });
-        userId = user._id;
+        
+
     } catch (err) {
         console.error("Login error:", err);
         res.status(500).json({ error: 'Server error' });
     }
 });
+
+app.get('/last-photo/:userId', async (req, res) => {
+    try {
+        // const { userId } = req.params;
+        console.log("Received userId:", userId);
+
+
+        // Convert userId to ObjectId
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ error: 'Invalid user ID format' });
+        }
+
+        const lastPhoto = await Photo.findOne({ user: new mongoose.Types.ObjectId(userId) })
+            .sort({ createdAt: -1 }) // Get the most recent photo
+            .exec();
+
+        if (!lastPhoto) {
+            return res.status(404).json({ error: "No photos found for this user" });
+        }
+
+        res.status(200).json(lastPhoto);
+    } catch (error) {
+        console.error("Error fetching last photo:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
 
 // Start the server
 app.listen(5000, () => console.log("🚀 Server running on port 5000"));
