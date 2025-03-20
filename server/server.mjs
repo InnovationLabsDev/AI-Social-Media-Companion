@@ -1,264 +1,181 @@
 import express from 'express';
-import mysql from 'mysql2/promise';
-import cors from 'cors';
-import bcrypt from 'bcrypt';
-// import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import axios from 'axios';
 import { GoogleGenerativeAI} from '@google/generative-ai';
-import fs from 'fs';
+import multer from 'multer';
+import cloudinary from 'cloudinary';
+
+import User from './models/User.mjs'; 
+import Photo from './models/Photo.mjs';
+import { uploadToCloudinary } from './models/cloudinaryService.mjs';
 
 dotenv.config();
 
-
 const app = express();
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
+let userId = null;
 
-// Database connection
-const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'PostPal_4',
-    database: 'postpal',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => console.log("✅ Connected to MongoDB Atlas"))
+.catch(err => console.error("❌ MongoDB Connection Error:", err));
 
-// Route to fetch data
-app.get('/', async (req, res) => {
-    try {
-        const [rows] = await pool.query('SELECT id, name, email, password, picture FROM users');
+const storage = multer.memoryStorage(); // Store files in memory (for Cloudinary streaming)
+const upload = multer({ storage: storage }); // Initialize multer with memory storage
 
-        // Convert BLOB to Base64
-        const users = rows.map(user => ({
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            password: user.password,
-            picture: user.picture ? `data:image/png;base64,${user.picture.toString('base64')}` : null
-        }));
-
-        res.json(users);
-    } catch (err) {
-        console.error('Error fetching users:', err);
-        res.status(500).json({ error: 'Database query failed' });
-    }
-});
-
-app.get('/users', async (req, res) => {
-    try {
-        const [rows] = await pool.query('SELECT id, photo FROM photos');
-
-        // Convert BLOB to Base64
-        const users = rows.map(user => ({
-            id: user.id,
-            photo: user.photo ? `data:image/jpg;base64,${user.photo.toString('base64')}` : null
-        }));
-
-        res.json(users);
-    } catch (err) {
-        console.error('Error fetching users:', err);
-        res.status(500).json({ error: 'Database query failed' });
-    }
-});
-
-app.post("/", async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-        const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
-
-        if (rows.length === 0) {
-            return res.status(401).json({ error: "Invalid email or password" });
-        }
-
-        const user = rows[0];
-
-        console.log("Stored Hashed Password:", user.password);
-        console.log("Entered Password:", password);
-
-        // Now compare plain-text password with the hashed password
-        const passwordMatch = await bcrypt.compare(password, user.password);
-
-        console.log("Password Match:", passwordMatch);
-
-        if (!passwordMatch) {
-            return res.status(401).json({ error: "Invalid email or password" });
-        }
-
-        res.json({ message: "Login successful", user });
-    } catch (error) {
-        console.error("Login error:", error);
-        res.status(500).json({ error: "Server error" });
-    }
-});
-
-app.post("/register", async (req, res) => {
-    const {email, password, name} = req.body;
-    console.log(email, password, name);
-
-
-    try {
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Store the user in the database
-        const [result] = await pool.query("INSERT INTO users (email, password, name) VALUES (?, ?, ?)", [email, hashedPassword, name]);
-
-        res.json({ userId: result.insertId });
-    } catch (error) {
-        console.error("Registration error:", error);
-        res.status(500).json({ error: "Server error" });
-    }
-});
-
-// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-// const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-// function fileToGenerativePart(path, mimeType) {
-//     return {
-//         inlineData: {
-//             data: Buffer.from(fs.readFileSync(path)).toString("base64"),
-//             mimeType,
-//         },
-//     };
-// }
-
-// Route to generate caption & hashtags
-app.get('/caption', async (req, res) => {
-    try {
-        // Get all photo IDs
-        const [rows_id] = await pool.query('SELECT id FROM photos');
-
-        if (rows_id.length === 0) {
-            return res.status(404).json({ error: "No images found in the database" });
-        }
-
-        // Pick the first available ID (or choose a specific one)
-        const photoId = rows_id[0].id;  
-
-        // Fetch the corresponding image from the database
-        const [rows] = await pool.query('SELECT photo FROM photos WHERE id = ?', [photoId]);
-
-        if (rows.length === 0 || !rows[0].photo) {
-            return res.status(404).json({ error: "Image not found" });
-        }
-
-        // Convert BLOB image to Base64
-        const base64Image = rows[0].photo.toString('base64');
-
-        // Google Gemini API Setup
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-        const prompt = "Generate 5 creative social media captions with 3-5 relevant hashtags for this image. Do not write anything else but the captions and hashtags.";
-        const imagePart = { inlineData: { data: base64Image, mimeType: "image/jpeg" } };
-
-        const result = await model.generateContent([prompt, imagePart]);
-        
-        // Extract response text
-        const responseText = result.response.text();
-
-        // Ensure responseText is a valid string
-        if (!responseText) {
-            return res.status(500).json({ error: "Failed to generate caption, empty response from AI" });
-        }
-
-        // Extract hashtags from the response (basic split, might need regex refinement)
-        const hashtags = responseText.match(/#\w+/g) || [];
-        const hashtagsCount = hashtags.length;
-        
-        const caption = responseText.replace(/^Here.*?:.*?\"/s, '').trim();
-        const captionArray = caption
-        .split(/\n\n\d+\./) // Split by double new lines and numbered format (e.g., "2.")
-        .map(c => c.replace(/^\d+\.\s*/, '').trim()) // Remove leading numbers and trim spaces
-        .map(c => c.replace(/#\w+/g, '').trim()) // Remove hashtags
-        .filter(c => c.length > 0); // Filter out empty captions
-  
-
-        // Send JSON response
-        res.json({ 
-            captionArray, 
-            hashtags 
-        });
-
-    } catch (error) {
-        console.error("Error processing request:", error);
-        res.status(500).json({ error: "Failed to generate caption", details: error.message });
-    }
-});
-
-// app.get("/caption", (req, res) => {
-//     const photoId = req.params.id;
-
-//     try {
-//         // Fetch the image from the database
-//         const [rows] = pool.query("SELECT photo FROM photos WHERE id = ?", [photoId]);
-
-//         if (rows.length === 0) {
-//             return res.status(404).json({ error: "Image not found" });
-//         }
-
-//         // Convert BLOB to Base64
-//         const imageBase64 = rows[0].photo ? rows[0].photo.toString("base64") : null;
-
-//         if (!imageBase64) {
-//             return res.status(400).json({ error: "Invalid image data" });
-//         }
-
-//         // Define the prompt
-//         const prompt = "Generate a creative and engaging social media caption with relevant hashtags for this image.";
-
-//         // Make API request to Gemini
-//         const response = axios.post(
-//             `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateText?key=${GEMINI_API_KEY}`,
-//             {
-//                 prompt: {
-//                     text: prompt,
-//                     image: `data:image/jpg;base64,${imageBase64}` // Ensure correct format
-//                 }
-//             }
-//         );
-
-//         const result = response.data;
-
-//         res.json({ caption: result.choices[0].text });
-
-//     } catch (error) {
-//         console.error("Gemini API Error:", error.response?.data || error.message);
-//         res.status(500).json({ error: "Failed to generate caption" });
-//     }
+// // Create basic routes
+// app.get('/', (req, res) => {
+//     res.send("Hello, World!");
 // });
 
-const fetchMeetingImage = async () => {
-    setLoading(true);
+app.post('/main-page', upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    // Upload to Cloudinary
+    const result = await uploadToCloudinary(req.file.buffer);
+
+    // console.log(result);
     
-    fetch("http://localhost:5000/users")
-        .then(res => {
-            if (!res.ok) {
-                throw new Error(`HTTP error! Status: ${res.status}`);
-            }
-            return res.json();
-        })
-        .then(data => {
-            if (data.image) {
-                setPhoto(data.image); // Set Base64 image as source
-            } else {
-                console.error("No image found");
-            }
-        })
-        .catch(err => console.error("Error fetching image:", err))
-        .finally(() => setLoading(false));
-};
+    // Example transformation on the uploaded image
+    const url = cloudinary.url(result.public_id, {
+      transformation: [
+        { quality: 'auto' },
+        { fetch_format: 'auto' }
+      ]
+    });
 
+    console.log('Generated URL with transformations:', url);
 
-// Start server
-const PORT = 5000;
-app.listen(PORT, () => {
-    console.log(`✅ Server running at http://localhost:${PORT}`);
+    const photo = new Photo({
+        title: req.body.title || req.file.originalname,
+        url: url,
+        caption: req.body.caption || [],
+        hashtags: req.body.hashtags || [],
+        user: userId,
+    });
+
+    await photo.save();
+
+    // Respond with the Cloudinary URL (optional)
+    res.status(200).json({
+      message: 'File uploaded to Cloudinary',
+      title: req.file.originalname,
+      user: userId,
+      url 
+    });
+
+  } catch (error) {
+    console.error('Error handling file upload:', error);
+    res.status(500).json({ message: 'Error processing the file', error });
+  }
 });
+
+
+// Registration route
+app.post('/register', async (req, res) => {
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    try {
+        // Check if user already exists
+        const userExists = await User.findOne({ email });
+        if (userExists) {
+            return res.status(400).json({ error: 'User already exists' });
+        }
+
+        // Create a new user
+        const user = new User({
+            name,
+            email,
+            password
+        });
+
+        // Save the user to the database
+        await user.save();
+
+        res.status(201).json({ message: 'User registered successfully' });
+    } catch (err) {
+        console.error("Registration error:", err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// Login route
+app.post('/', async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    try {
+        // Find the user by email
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(401).json({ error: 'Invalid email or password' });
+        }
+
+        // Check if the password matches
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Invalid email or password' });
+        }
+
+        userId = user._id;
+        // Return success message or JWT here (if using JWT)
+        res.json({ message: 'Login successful', userId: user._id });
+        
+
+    } catch (err) {
+        console.error("Login error:", err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+app.get('/last-photo/:userId', async (req, res) => {
+    try {
+        // const { userId } = req.params;
+        console.log("Received userId:", userId);
+
+
+        // Convert userId to ObjectId
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ error: 'Invalid user ID format' });
+        }
+
+        const lastPhoto = await Photo.findOne({ user: new mongoose.Types.ObjectId(userId) })
+            .sort({ createdAt: -1 }) // Get the most recent photo
+            .exec();
+
+        if (!lastPhoto) {
+            return res.status(404).json({ error: "No photos found for this user" });
+        }
+
+        res.status(200).json(lastPhoto);
+    } catch (error) {
+        console.error("Error fetching last photo:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+
+// Start the server
+app.listen(5000, () => console.log("🚀 Server running on port 5000"));
