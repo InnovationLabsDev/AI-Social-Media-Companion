@@ -107,7 +107,7 @@ const MainPage = () => {
         };
 
         fetchLastPhoto();
-    }, [userId]);
+    }, [userId, file]);
     const togglePlatformSelection = (platform) => {
         setSelectedPlatforms((prev) =>
             prev.includes(platform) ? prev.filter((p) => p !== platform) : [...prev, platform]
@@ -138,8 +138,11 @@ const MainPage = () => {
             console.log(data);
 
             if (response.ok) {
-                const imageUrl = data.imageUrl; // Get the uploaded image URL
-                setPhoto(imageUrl); // Update the photo state with the image URL
+                // const imageUrl = data.imageUrl; // Get the uploaded image URL
+                // setPhoto(imageUrl); // Update the photo state with the image URL
+                console.log("File uploaded successfully!");
+                setPhoto("");
+                setTimeout(() => setPhoto(data.url), 50);
                 alert("File uploaded successfully!");
             } else {
                 alert("Error uploading file.");
