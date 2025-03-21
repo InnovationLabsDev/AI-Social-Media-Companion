@@ -71,6 +71,8 @@ app.post('/main-page', upload.single('file'), async (req, res) => {
 
     await photo.save();
 
+    await generateCaptions(userId, url);
+
     // Respond with the Cloudinary URL (optional)
     res.status(200).json({
       message: 'File uploaded to Cloudinary',
@@ -150,6 +152,27 @@ app.post('/', async (req, res) => {
     }
 });
 
+async function generateCaptions(userId, imageUrl) {
+    try {
+        const imageBuffer = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+        const base64Image = Buffer.from(imageBuffer.data).toString('base64');
+
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+        const prompt = "Generate 5 creative social media captions with 3-5 hashtags for this image.";
+        const imagePart = { inlineData: { data: base64Image, mimeType: "image/jpeg" } };
+
+        const result = await model.generateContent([prompt, imagePart]);
+        const responseText = result.response.text();
+
+        console.log("Generated caption:", responseText);
+        return responseText; // Optionally save it in DB
+    } catch (error) {
+        console.error("Caption generation error:", error);
+    }
+}
+
 app.get('/last-photo/:userId', async (req, res) => {
     try {
         // const { userId } = req.params;
@@ -169,6 +192,28 @@ app.get('/last-photo/:userId', async (req, res) => {
             return res.status(404).json({ error: "No photos found for this user" });
         }
 
+        // INCEARCA SA MUTI IN ALTA FUNCTIE
+        
+        await generateCaptions(userId, lastPhoto.url);
+        // const imageUrl = lastPhoto.url;
+        // const imageBuffer = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+
+        // const base64Image = Buffer.from(imageBuffer.data).toString('base64');
+
+        // const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        // const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+        // const promt = "Generate 5 creative social media caption with 3-5 hashtags for this image. Write only the captions and hashtags. Do not write anything else.";
+        // const imagePart = { inlineData: { data: base64Image, mimeType: "image/jpeg" } };
+
+        // const result = await model.generateContent([promt, imagePart]);
+        // const responseText = result.response.text();
+
+        // if (!responseText) {
+        //     return res.status(500).json({ error: "Error generating caption" });
+        // }
+
+        // console.log("Generated caption:", responseText);
         res.status(200).json(lastPhoto);
     } catch (error) {
         console.error("Error fetching last photo:", error);
