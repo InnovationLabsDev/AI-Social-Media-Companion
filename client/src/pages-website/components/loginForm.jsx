@@ -53,7 +53,7 @@ function LoginForm() {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-                    <Link to={"/main-page"}><button type="submit" className={classes.login_button}>Login</button></Link>
+                    <Link to={"/home-page"}><button type="submit" className={classes.login_button}>Login</button></Link>
                     <button type="button" className={classes.login_with} onClick={() => handleLoginWith("SAlut")}>Login with FaceBook</button>
                     <button type="button" className={classes.login_with}>Login with LinkedIn</button>
                     <button type="button" className={classes.login_with}>Login with Instagram</button>
