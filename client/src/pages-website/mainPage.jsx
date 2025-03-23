@@ -18,42 +18,50 @@ const MainPage = () => {
     const [file, setFile] = useState(null);
     const userId = localStorage.getItem("userId");
 
+    const [skipCount, setSkipCount] = useState(0); // Tracks how many times we regenerated
+
     const [captionsNr, setCaptionsNr] = useState(0);
     const [hashtagsNr, setHashtagsNr] = useState(0);
     const [captionIndex, setCaptionIndex] = useState(0);
     const [hashtagsIndex, setHashtagsIndex] = useState(0);
 
     useEffect(() => {
+        fetchLastPhoto(0); // Initially fetch the most recent photo
+    }, [userId]);
+
+    const fetchLastPhoto = async (skip) => {
         if (!userId) {
             console.error("User ID not found!");
             return;
         }
 
-        const fetchLastPhoto = async () => {
-            try {
-                const response = await fetch(`http://localhost:5000/last-photo/${userId}`);
-                if (!response.ok) throw new Error("Failed to fetch last photo");
+        setLoading(true);
+        try {
+            const response = await fetch(`http://localhost:5000/photo/${userId}/${skip}`);
+            console.log("User ID from localStorage:", userId, skip);
 
-                const data = await response.json();
-                setCaptionsNr(data.caption.length);
-                setHashtagsNr(data.hashtags.length);
+            if (!response.ok) throw new Error("Failed to fetch last photo");
 
-                setPhoto(data.url);
-                setAllCaptions(data.caption);
-                setAllHashtags(data.hashtags);
-                setCaption(data.caption[0]);
-                setHashtags(data.hashtags.slice(0, 3));
+            const data = await response.json();
+            setCaptionsNr(data.caption.length);
+            setHashtagsNr(data.hashtags.length);
 
-            } catch (error) {
-                console.error("Error fetching last photo:", error);
-            }
-        };
+            setPhoto(data.url);
+            setAllCaptions(data.caption);
+            setAllHashtags(data.hashtags);
+            setCaption(data.caption[0]);
+            setHashtags(data.hashtags.slice(0, 3));
 
-        fetchLastPhoto();
-    }, [userId, file]);
+        } catch (error) {
+            console.error("Error fetching last photo:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const regeneratePhoto = () => {
-        setPhoto(`https://picsum.photos/300/300?random=${Math.random()}`);
+        setSkipCount((prev) => prev + 1); // Increment skip count
+        fetchLastPhoto(skipCount + 1); // Fetch the next older photo
     };
 
     const regenerateCaption = () => {

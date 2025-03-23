@@ -210,31 +210,33 @@ async function generateCaptions(userId, imageUrl) {
     }
 }
 
-app.get('/last-photo/:userId', async (req, res) => {
+app.get('/photo/:userId/:skipCount', async (req, res) => {
     try {
-        // const { userId } = req.params;
-        console.log("Received userId:", userId);
+        const { userId, skipCount } = req.params;
+        console.log(`Received userId: ${userId}, skipping ${skipCount} photos`);
 
-
-        // Convert userId to ObjectId
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return res.status(400).json({ error: 'Invalid user ID format' });
         }
 
-        const lastPhoto = await Photo.findOne({ user: new mongoose.Types.ObjectId(userId) })
-            .sort({ createdAt: -1 }) // Get the most recent photo
+        const photo = await Photo.find({ user: new mongoose.Types.ObjectId(userId) })
+            .sort({ createdAt: -1 })
+            .skip(parseInt(skipCount))
+            .limit(1)
             .exec();
 
-        if (!lastPhoto) {
-            return res.status(404).json({ error: "No photos found for this user" });
+        if (!photo.length) {
+            return res.status(404).json({ error: "No more photos available" });
         }
-        
-        res.status(200).json(lastPhoto);
+
+        res.status(200).json(photo[0]);
     } catch (error) {
-        console.error("Error fetching last photo:", error);
+        console.error("Error fetching photo:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 });
+
+
 
 
 // Start the server
