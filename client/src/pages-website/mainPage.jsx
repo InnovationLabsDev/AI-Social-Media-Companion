@@ -101,6 +101,10 @@ const MainPage = () => {
 
                 const data = await response.json();
                 setPhoto(data.url);
+                setCaption(data.caption[0]);
+                setHashtags(data.hashtags.slice(0, 3));
+                // console.log(caption);
+                // console.log(hashtags);
             } catch (error) {
                 console.error("Error fetching last photo:", error);
             }
