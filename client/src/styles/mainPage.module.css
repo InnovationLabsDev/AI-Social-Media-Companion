@@ -102,9 +102,9 @@
 /* Refresh Button on Photo (Floating in Corner) */
 .refreshPhotoButton {
     position: absolute;
-    top: 250px;
+    /* top: 250px; */
     /* right: 20px; */
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.35);
     color: white;
     border: none;
     padding: 6px;
@@ -113,6 +113,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 10vw;
+    height: 10vw;
 }
 
 .refreshPhotoButton:hover {
