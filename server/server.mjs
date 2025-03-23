@@ -229,8 +229,6 @@ app.get('/last-photo/:userId', async (req, res) => {
             return res.status(404).json({ error: "No photos found for this user" });
         }
         
-        // await generateCaptions(userId, lastPhoto.url);
-        
         res.status(200).json(lastPhoto);
     } catch (error) {
         console.error("Error fetching last photo:", error);

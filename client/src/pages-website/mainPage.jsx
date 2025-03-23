@@ -11,82 +11,17 @@ const MainPage = () => {
     const [photo, setPhoto] = useState(null);
     const [caption, setCaption] = useState("This is a sample caption.");
     const [hashtags, setHashtags] = useState([]);
+    const [allHashtags, setAllHashtags] = useState([]);
     const [allCaptions, setAllCaptions] = useState([]);
     const [selectedPlatforms, setSelectedPlatforms] = useState([]);
     const [loading, setLoading] = useState(false);
     const [file, setFile] = useState(null);
     const userId = localStorage.getItem("userId");
 
-    // useEffect(() => {
-    //     // Fetch captions and hashtags on component mount
-    //     fetchCaptions();
-    //     fetchHashtags();
-    // }, []);
-
-    // // Function to shuffle an array
-    // function shuffleArray(array) {
-    //     for (let i = array.length - 1; i > 0; i--) {
-    //         const j = Math.floor(Math.random() * (i + 1));
-    //         [array[i], array[j]] = [array[j], array[i]]; // Swap elements
-    //     }
-    //     return array;
-    // }
-
-    // const fetchCaptions = async () => {
-    //     setLoading(true);
-    //     try {
-    //         const res = await fetch("http://localhost:5000/caption");
-    //         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-    //         const data = await res.json();
-    //         if (Array.isArray(data.captionArray)) {
-    //             setAllCaptions(data.captionArray);
-    //             const shuffledCaptions = shuffleArray(data.captionArray);
-    //             setCaption(shuffledCaptions[0]); // Select random caption
-    //         } else {
-    //             console.error("Invalid JSON structure:", data);
-    //         }
-    //     } catch (err) {
-    //         console.error("Error fetching captions:", err);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-
-    // const fetchHashtags = async () => {
-    //     setLoading(true);
-    //     try {
-    //         const res = await fetch("http://localhost:5000/hashtags");
-    //         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-    //         const data = await res.json();
-    //         if (Array.isArray(data.hashtags)) {
-    //             const shuffledHashtags = shuffleArray(data.hashtags);
-    //             setHashtags(shuffledHashtags.slice(0, 3)); // Select top 3 hashtags
-    //         } else {
-    //             console.error("Invalid JSON structure:", data);
-    //         }
-    //     } catch (err) {
-    //         console.error("Error fetching hashtags:", err);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-
-    const regeneratePhoto = () => {
-        setPhoto(`https://picsum.photos/300/300?random=${Math.random()}`); // Regenerate random photo
-        fetchCaptions();
-        fetchHashtags();
-    };
-
-    const regenerateCaption = () => {
-        if (allCaptions.length > 0) {
-            const shuffledCaptions = shuffleArray(allCaptions);
-            setCaption(shuffledCaptions[0]); // Regenerate caption
-        }
-    };
-
-    const regenerateHashtags = () => {
-        fetchHashtags(); // Fetch new hashtags
-    };
+    const [captionsNr, setCaptionsNr] = useState(0);
+    const [hashtagsNr, setHashtagsNr] = useState(0);
+    const [captionIndex, setCaptionIndex] = useState(0);
+    const [hashtagsIndex, setHashtagsIndex] = useState(0);
 
     useEffect(() => {
         if (!userId) {
@@ -100,11 +35,15 @@ const MainPage = () => {
                 if (!response.ok) throw new Error("Failed to fetch last photo");
 
                 const data = await response.json();
+                setCaptionsNr(data.caption.length);
+                setHashtagsNr(data.hashtags.length);
+
                 setPhoto(data.url);
+                setAllCaptions(data.caption);
+                setAllHashtags(data.hashtags);
                 setCaption(data.caption[0]);
                 setHashtags(data.hashtags.slice(0, 3));
-                // console.log(caption);
-                // console.log(hashtags);
+
             } catch (error) {
                 console.error("Error fetching last photo:", error);
             }
@@ -112,6 +51,27 @@ const MainPage = () => {
 
         fetchLastPhoto();
     }, [userId, file]);
+
+    const regeneratePhoto = () => {
+        setPhoto(`https://picsum.photos/300/300?random=${Math.random()}`);
+    };
+
+    const regenerateCaption = () => {
+        if (allCaptions.length > 0) {
+            const newIndex = (captionIndex + 1) % allCaptions.length;
+            setCaptionIndex(newIndex);
+            setCaption(allCaptions[newIndex]);
+        }
+    };
+
+    const regenerateHashtags = () => {
+        if (hashtagsNr > 3) {
+            const newIndex = (hashtagsIndex + 3) % hashtagsNr;
+            setHashtagsIndex(newIndex);
+            setHashtags(allHashtags.slice(newIndex, newIndex + 3));
+        }
+    };
+
     const togglePlatformSelection = (platform) => {
         setSelectedPlatforms((prev) =>
             prev.includes(platform) ? prev.filter((p) => p !== platform) : [...prev, platform]
