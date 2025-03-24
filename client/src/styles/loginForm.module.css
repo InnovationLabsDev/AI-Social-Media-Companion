@@ -1,129 +1,245 @@
-/* LoginForm.css */
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    /* background-color: #f3f4f6; */
-}
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
-.login_box {
+/* 🌟 Main Container */
+.login_container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    background: white;
-    background-color: rgb(255, 255, 255, 0.8);
-    /* margin: 1vw; */
-    /* padding: 20px; */
-    /* border-radius: 12px; */
-    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
-    height: 50vh;
+    justify-content: center;
+    height: 100vh;
     width: 100vw;
-    text-align: center;
+    background-color: #0b1d3d;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    /* Everything is Roboto */
 }
 
-h2 {
-    font-size: 24px;
-    margin-bottom: 16px;
+/* 🏷️ Logo */
+.logo {
+    font-size: 48px;
+    font-weight: normal;
+    margin-bottom: 15px;
+    color: #fca311;
+    font-family: 'Kasei Decol';
+    /* Title stays in Kasei Decol */
 }
 
+/* 🟠 Profile Picture */
+.profile_icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.profile_icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* 🖊️ Input Fields */
 .input_group {
-    margin-bottom: 12px;
-    text-align: left;
-    width: 75vw;
-}
-
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-input {
-    width: 100%;
-    /* padding: 8px; */
-    padding-top: 8px;
-    padding-bottom: 8px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-}
-
-.error_message {
-    color: red;
-    font-size: 14px;
+    display: flex;
+    align-items: center;
+    background: #6B818C;
+    padding: 10px;
+    border-radius: 8px;
     margin-bottom: 10px;
+    width: 280px;
 }
 
+.input_group .icon {
+    color: white;
+    margin-right: 8px;
+}
+
+.input_group input {
+    border: none;
+    outline: none;
+    background: none;
+    color: white;
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+}
+
+.input_group input::placeholder {
+    color: #14213d;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* ✅ Remember Me & Forgot Password */
+.remember_forgot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Center both elements */
+    gap: 10px;
+    /* Adjust spacing */
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #bbb;
+    font-weight: normal;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 20px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: 0.4s;
+}
+
+.switch input:checked+.slider {
+    background-color: #fca311;
+}
+
+.switch input:checked+.slider:before {
+    transform: translateX(20px);
+}
+
+.forgot_password {
+    color: #bbb;
+    text-decoration: none;
+    margin-left: 22px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: normal;
+    text-decoration: underline;
+}
+
+/* 🔑 Login Button */
 .login_button {
-    width: 75vw;
-    background: #3b82f6;
-    color: white;
-    padding: 10px;
-    /* border: none; */
-    border-radius: 6px;
+    background: #fca311;
+    color: #14213d;
+    padding: 12px;
+    width: 160px;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
-    margin-bottom: 30px;
-    margin-top: 30px
-}
-
-.login_with {
-    width: 100%;
-    background: #3b82f6;
-    color: white;
-    padding: 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    transition: background 0.3s;
+    font-family: 'Roboto', sans-serif;
 }
 
 .login_button:hover {
-    background: #2563eb;
+    background: #d48c1d;
 }
 
-.login_register {
+/* OR Divider */
+.or_divider {
+    text-align: center;
+    margin: 10px 0;
+    width: 280px;
+    font-size: 14px;
+    color: #bbb;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* 🌐 Social Login Buttons */
+.social_login {
     display: flex;
-    justify-content: center;
     align-items: center;
-    margin-top: 10px;
-    color: white
-}
-
-.register_button {
-    background: #3b82f6;
-    color: white;
-    padding: 10px;
-    border-radius: 6px;
-    cursor: pointer;
+    justify-content: center;
+    width: 280px;
+    padding: 12px;
+    border-radius: 8px;
     font-size: 16px;
-    margin-left: 10px;
-    width: 25vw;
+    cursor: pointer;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border: none;
+    transition: transform 0.2s ease-in-out;
+    font-family: 'Roboto', sans-serif;
 }
 
-.register_button>a {
+/* OR Divider with Horizontal Lines */
+.or_divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 400px;
+    font-size: 14px;
+    color: #fca311;
+    font-family: 'Roboto', sans-serif;
+    margin: 15px;
+}
+
+.or_divider::before,
+.or_divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: #bbb;
+    margin: 0 10px;
+}
+
+.social_login:hover {
+    transform: scale(1.05);
+}
+
+.google {
+    background: white;
+    color: black;
+}
+
+.facebook {
+    background: #1877f2;
     color: white;
 }
 
-.form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    /* background-color: #14213D; */
+.linkedin {
+    background: #0077b5;
+    color: white;
 }
 
-.login_box>.facebok_button {
-    /* background-color: '#4267b2';
-    color: '#fff';
-    font-size: '16px';
-    padding: '12px 24px';
-    border: 'none';
-    border-radius: '4px';
-    margin-top: '10px'; */
-    width: 75vw;
+/* 📜 Terms */
+.terms {
+    text-align: center;
+    font-size: 12px;
+    width: 350px;
+    margin-top: 15px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.terms a {
+    color: #f5a623;
+    text-decoration: none;
 }

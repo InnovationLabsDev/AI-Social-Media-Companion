@@ -160,14 +160,15 @@ app.post('/register', async (req, res) => {
 // Login route
 app.post('/', async (req, res) => {
     const { email, password } = req.body;
+    const name = email;
 
     if (!email || !password) {
         return res.status(400).json({ error: 'Email and password are required' });
     }
-
+    
     try {
-        // Find the user by email
-        const user = await User.findOne({ email });
+        // Find the user by email or name
+        const user = await User.findOne({ $or: [{ email }, { name }] });
         if (!user) {
             return res.status(401).json({ error: 'Invalid email or password' });
         }

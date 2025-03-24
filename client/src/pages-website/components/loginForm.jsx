@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { Link } from "react-router-dom";
+import { FaUser, FaLock, FaFacebook, FaLinkedin } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
+
 
 import classes from '../../styles/loginForm.module.css';
 import axios from 'axios';
@@ -15,6 +18,7 @@ function LoginForm() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [users, setUsers] = useState([]);
+    const [rememberMe, setRememberMe] = useState(false);
 
     // Legare de backend
     const [array, setArray] = useState([]);
@@ -99,70 +103,73 @@ function LoginForm() {
     };
 
     return (
-        <div className={classes.container} >
-            <div className={classes.login_box}>
-                <h2>
-                    <button className={classes.register_button}>
-                        <Link to="/registration">Register</Link>
-                    </button>
-                </h2>
-                {error && <p className={classes.error_message}>{error}</p>}
-                <form onSubmit={handleSubmit} className={classes.form}>
-                    <div className={classes.input_group}>
-                        <label>Email</label>
-                        <input
-                            type="email"
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-                    <div className={classes.input_group}>
-                        <label>Password</label>
-                        <input
-                            type="password"
-                            placeholder="Enter your password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
-                    <button type="submit" className={classes.login_button}>Login</button>
-                    <button type="button" className={classes.login_with} onClick={() => handleLoginWith("SAlut")}>Login with FaceBook</button>
-                    <button type="button" className={classes.login_with}>Login with LinkedIn</button>
-                    <button type="button" className={classes.login_with}>Login with Instagram</button>
-                </form>
-                {/* <div>
-                    {users.map(user => (
-                        <div key={user.id}>
-                            <h3>{user.name} ({user.email})</h3>
-                            {user.picture ? (
-                                <img src={user.picture} alt="User" width="200" />
-                            ) : (
-                                <p>No Picture</p>
-                            )}
-                        </div>
-                    ))}
-                </div> */}
-                <FacebookLogin className={classes.facebook_button}
-                    appId="645771001175191" // Replace with your Facebook App ID
-                    onSuccess={handleFacebookSuccess}
-                    onFail={handleFacebookFailure}
-                    style={{
-                        backgroundColor: '#4267b2',
-                        color: '#fff',
-                        fontSize: '16px',
-                        padding: '12px 24px',
-                        border: 'none',
-                        borderRadius: '4px',
-                        marginTop: '10px',
-                        marginBottom: '10px',
-                        width: '75vw'
-                    }}
-                >
-                    Login with Facebook
-                </FacebookLogin>
+        <div className={classes.login_container}>
+            <h1 className={classes.logo}>PostPal 🚀</h1>
+
+            {/* Round profile image */}
+            <div className={classes.profile_icon}>
+                <img src="/profile-placeholder.png" alt="Profile" />
             </div>
-        </div >
+
+            {error && <p className={classes.error_message}>{error}</p>}
+
+            <form onSubmit={handleSubmit}>
+                <div className={classes.input_group}>
+                    <FaUser className={classes.icon} />
+                    <input
+                        type="text"
+                        placeholder="Username"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
+                <div className={classes.input_group}>
+                    <FaLock className={classes.icon} />
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
+
+                <div className={classes.remember_forgot}>
+                    <label className={classes.switch}>
+                        <input
+                            type="checkbox"
+                            checked={rememberMe}
+                            onChange={() => setRememberMe(!rememberMe)}
+                        />
+                        <span className={classes.slider}></span>
+                    </label>
+                    <span className={classes.remember}> Remember me</span>
+                    <Link to="/forgot-password" className={classes.forgot_password}>
+                        Forgot password?
+                    </Link>
+                </div>
+
+                <button type="submit" className={classes.login_button}>Login</button>
+            </form>
+
+            <div className={classes.or_divider}>or</div>
+
+            <button className={`${classes.social_login} ${classes.facebook}`}>
+                <FaFacebook /> Continue with Facebook
+            </button>
+
+            <button className={`${classes.social_login} ${classes.linkedin}`}>
+                <FaLinkedin /> Continue with LinkedIn
+            </button>
+
+            <button className={`${classes.social_login} ${classes.google}`}>
+                <FcGoogle /> Continue with Google
+            </button>
+
+
+            <p className={classes.terms}>
+                By clicking continue, you agree to our <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>.
+            </p>
+        </div>
     );
 }
 
