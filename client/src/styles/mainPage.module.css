@@ -102,14 +102,19 @@
 /* Refresh Button on Photo (Floating in Corner) */
 .refreshPhotoButton {
     position: absolute;
-    top: 250px;
-    right: 20px;
-    background: rgba(0, 0, 0, 0.6);
+    /* top: 250px; */
+    /* right: 20px; */
+    background: rgba(0, 0, 0, 0.35);
     color: white;
     border: none;
     padding: 6px;
     border-radius: 50%;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 10vw;
+    height: 10vw;
 }
 
 .refreshPhotoButton:hover {
@@ -120,7 +125,7 @@
 .captionRow {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 10px;
 }
 
@@ -138,7 +143,7 @@
     padding: 6px;
     border-radius: 50%;
     cursor: pointer;
-    margin-right: 20px;
+    /* margin-right: 20px; */
 }
 
 .refreshButton:hover {
@@ -150,6 +155,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     /* Center-align the hashtags */
     gap: 8px;
     /* Space between hashtags */
@@ -167,7 +173,8 @@
     text-align: center;
     flex: 1 1 auto;
     /* Allows flexible sizing */
-    max-width: calc(50% - 10px);
+    /* max-width: calc(50% - 10px); */
+    width: fit-content;
     /* Ensures two columns */
 }
 
