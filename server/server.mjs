@@ -89,6 +89,7 @@ app.post('/main-page', upload.single('file'), async (req, res) => {
                 .map(line => line.replace(/"/g, "").trim()) // Remove double quotes
                 .map(line => line.replace(/\*/g, "").trim()) // Remove asterisks
                 .map(line => line.replace(/^\d+\.\s*/, "").trim()) // Remove numbers like "1."
+                .map(line => line.replace(/>/g, "").trim()) // Remove greater than signs
                 .filter(line => line.length > 0); // Remove empty lines
         };
         
@@ -203,7 +204,8 @@ async function generateCaptions(userId, imageUrl) {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        const prompt = "Generate 5 creative social media captions with 3-5 hashtags for this image.";
+        const prompt = "Generate 5 creative social media captions with 3-5 hashtags for this image," + 
+        " with the location being Tandem Building, Orange office and the date of the second Bootcamp at InnovationLabs.";
         const imagePart = { inlineData: { data: base64Image, mimeType: "image/jpeg" } };
 
         const result = await model.generateContent([prompt, imagePart]);
