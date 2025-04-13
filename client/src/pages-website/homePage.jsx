@@ -1,24 +1,83 @@
-import React from "react";
-import { useNavigate } from "react-router-dom"; // Import navigation hook
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import classes from "../styles/homePage.module.css";
 
 const HomePage = () => {
-    const navigate = useNavigate(); // Hook for navigation
+    const navigate = useNavigate();
+    const userId = localStorage.getItem("userId");
 
-    const post = {
-        location: "📍 3890 Poplar Dr.",
-        caption: "Prepping for a brainstorming session with the creative team about our next campaign.",
-        hashtags: ["#design", "#development", "#meeting", "#tech"],
-        imageUrl: "https://picsum.photos/150/150"
+    const [captionsNr, setCaptionsNr] = useState(0);
+    const [hashtagsNr, setHashtagsNr] = useState(0);
+    const [photo, setPhoto] = useState(null);
+    const [caption, setCaption] = useState("This is a sample caption.");
+    const [hashtags, setHashtags] = useState([]);
+    const [allHashtags, setAllHashtags] = useState([]);
+    const [allCaptions, setAllCaptions] = useState([]);
+    const [availablePosts, setAvailablePosts] = useState([]);
+
+    useEffect(() => {
+        if (userId) {
+            fetchLastPhoto(0);
+            fetchAvailablePosts(6);
+        }
+    }, [userId]);
+
+    const fetchLastPhoto = async (skip) => {
+        if (!userId) {
+            console.error("User ID not found!");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5000/photo/${userId}/${skip}`);
+            if (!response.ok) throw new Error("Failed to fetch last photo");
+
+            const data = await response.json();
+            setCaptionsNr(data.caption.length);
+            setHashtagsNr(data.hashtags.length);
+
+            setPhoto(data.url);
+            setAllCaptions(data.caption);
+            setAllHashtags(data.hashtags);
+            setCaption(data.caption[0]);
+            setHashtags(data.hashtags.slice(0, 3));
+        } catch (error) {
+            console.error("Error fetching last photo:", error);
+        }
     };
 
-    const availablePosts = [
-        { location: "⚲ 8558 Green Rd.", title: "Demo Day", imageUrl: "https://picsum.photos/150/150?random=2" },
-        { location: "⚲ Champs-Élysées 246", title: "Hackathon", imageUrl: "https://picsum.photos/150/150?random=3" },
-        { location: "⚲ 42 Silicon Ave.", title: "Tech Talk", imageUrl: "https://picsum.photos/150/150?random=4" },
-        { location: "⚲ 21 Innovation St.", title: "Startup Pitch", imageUrl: "https://picsum.photos/150/150?random=5" },
-        { location: "⚲ 777 Developer Ln.", title: "Coding Sprint", imageUrl: "https://picsum.photos/150/150?random=6" }
-    ];
+    const fetchAvailablePosts = async (limit = 6) => {
+        if (!userId) return;
+
+        const posts = [];
+
+        for (let i = 0; i < limit; i++) {
+            try {
+                const response = await fetch(`http://localhost:5000/photo/${userId}/${i}`);
+                if (!response.ok) throw new Error("Failed to fetch photo");
+
+                const data = await response.json();
+                posts.push({
+                    location: "📍 Biblioteca UNSTPB",
+                    title: "Hackathon 2025",
+                    imageUrl: data.url,
+                    caption: data.caption[0],
+                    hashtags: data.hashtags.slice(0, 3),
+                });
+            } catch (err) {
+                console.error(`Error fetching post ${i}:`, err);
+            }
+        }
+
+        setAvailablePosts(posts);
+    };
+
+    const post = {
+        location: "📍 Biblioteca UNSTPB",
+        caption: caption,
+        hashtags: hashtags,
+        imageUrl: photo || "https://picsum.photos/150/150?random=1",
+    };
 
     return (
         <div className={classes.container}>
@@ -27,17 +86,17 @@ const HomePage = () => {
                 <h1 className={classes.appTitle}>PostPal 🚀</h1>
             </div>
 
-            {/* Highlighted Section - Clickable */}
+            {/* Highlighted Section */}
             <h2 className={classes.sectionTitle}>Highlighted ➤</h2>
             <div className={classes.highlightCard} onClick={() => navigate('/main-page')}>
                 <div className={classes.highlightContent}>
-                    {/* Left Section - Location and Image */}
+                    {/* Left Side */}
                     <div className={classes.leftSection}>
                         <p className={classes.postLocation}>{post.location}</p>
                         <img src={post.imageUrl} alt="Post" className={classes.postImage} />
                     </div>
 
-                    {/* Right Section - Caption & Hashtags */}
+                    {/* Right Side */}
                     <div className={classes.postText}>
                         <p className={classes.captionLabel}>Caption:</p>
                         <p className={classes.postCaption}>{post.caption}</p>
@@ -52,12 +111,16 @@ const HomePage = () => {
                 </div>
             </div>
 
-            {/* Available Posts */}
+            {/* Available Posts Section */}
             <h2 className={classes.sectionTitle}>Available Posts ➤</h2>
             <div className={classes.postsGrid}>
-                {availablePosts.map((post, index) => (
-                    <div key={index} className={classes.postCard}>
-                        <img src={post.imageUrl} alt={post.title} className={classes.postThumb} />
+                {availablePosts.slice(1).map((post, index) => (
+                    <div
+                        key={index}
+                        className={classes.postCard}
+                        onClick={() => navigate('/main-page?skip=' + (index + 1))}>
+
+                        <img src={post.imageUrl} alt={`Post ${index + 2}`} className={classes.postThumb} />
                         <p className={classes.postLoc}>{post.location}</p>
                         <p className={classes.postTitle}>{post.title}</p>
                     </div>

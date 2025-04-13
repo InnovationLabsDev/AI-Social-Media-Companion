@@ -85,6 +85,9 @@ app.post('/main-page', upload.single('file'), async (req, res) => {
                 .map(line => line.replace(/^\d+\.\s*\*\*"|"?\*\*$/g, "").trim()) // Remove numbers, "**", and quotes
                 .map(line => line.replace(/#\w+/g, "").trim()) // Remove hashtags
                 .map(line => line.replace(/^\d+\.\s*/, "").trim())
+                .map(line => line.replace(/"/g, "").trim()) // Remove double quotes
+                .map(line => line.replace(/\*/g, "").trim()) // Remove asterisks
+                .map(line => line.replace(/^\d+\.\s*/, "").trim()) // Remove numbers like "1."
                 .filter(line => line.length > 0); // Remove empty lines
         };
         

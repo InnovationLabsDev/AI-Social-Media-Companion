@@ -6,6 +6,7 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { FiRefreshCcw } from "react-icons/fi";
 import { FaInstagram, FaFacebookF, FaLinkedinIn, FaTwitter, FaPinterest } from "react-icons/fa";
 import cloudinary from "cloudinary-core";
+import { useLocation } from "react-router-dom";
 
 const MainPage = () => {
     const [photo, setPhoto] = useState(null);
@@ -24,10 +25,14 @@ const MainPage = () => {
     const [hashtagsNr, setHashtagsNr] = useState(0);
     const [captionIndex, setCaptionIndex] = useState(0);
     const [hashtagsIndex, setHashtagsIndex] = useState(0);
+    const location = useLocation(); // Get the current location
+    const queryParams = new URLSearchParams(location.search); // Parse the query parameters
+    const initialSkip = queryParams.get("skip") || 0; // Get the initial skip value from the URL
 
     useEffect(() => {
-        fetchLastPhoto(0); // Initially fetch the most recent photo
-    }, [userId]);
+        fetchLastPhoto(initialSkip); // Initially fetch the most recent photo
+        setSkipCount(initialSkip); // Set the initial skip count from the URL
+    }, [userId, initialSkip]);
 
     const fetchLastPhoto = async (skip) => {
         if (!userId) {
