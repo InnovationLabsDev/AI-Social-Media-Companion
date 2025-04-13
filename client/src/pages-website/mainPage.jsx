@@ -149,7 +149,7 @@ const MainPage = () => {
                     <FaRegUserCircle className={classes.userAvatar} />
                     <div className={classes.userDetails}>
                         <p className={classes.username}>@{userName}</p>
-                        <p className={classes.location}>📍 3890 Poplar Dr.</p>
+                        <p className={classes.location}>📍Tandem Building</p>
                     </div>
 
                     {/* File Upload */}
