@@ -18,6 +18,7 @@ const MainPage = () => {
     const [loading, setLoading] = useState(false);
     const [file, setFile] = useState(null);
     const userId = localStorage.getItem("userId");
+    const [userName, setUserName] = useState(localStorage.getItem("userName"));
 
     const [skipCount, setSkipCount] = useState(0); // Tracks how many times we regenerated
 
@@ -146,8 +147,8 @@ const MainPage = () => {
             <div className={classes.postCard}>
                 <div className={classes.userInfo}>
                     <FaRegUserCircle className={classes.userAvatar} />
-                    <div>
-                        <p className={classes.username}>@johnmaina</p>
+                    <div className={classes.userDetails}>
+                        <p className={classes.username}>@{userName}</p>
                         <p className={classes.location}>📍 3890 Poplar Dr.</p>
                     </div>
 

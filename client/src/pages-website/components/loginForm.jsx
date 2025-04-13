@@ -82,6 +82,7 @@ function LoginForm() {
 
             if (response.ok) {
                 localStorage.setItem("userId", data.userId); // Store userId
+                localStorage.setItem("userName", data.name); // Store userName
                 console.log("Login successful, userId:", data.userId);
                 navigate("/home-page"); // Redirect to the home page
             } else {

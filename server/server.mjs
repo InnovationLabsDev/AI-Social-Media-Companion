@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(cors());
 
 let userId = null;
+let userName = null;
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -183,8 +184,9 @@ app.post('/', async (req, res) => {
         }
 
         userId = user._id;
+        userName = user.name;
         // Return success message or JWT here (if using JWT)
-        res.json({ message: 'Login successful', userId: user._id });
+        res.json({ message: 'Login successful', userId: user._id, name: user.name });
         
 
     } catch (err) {
