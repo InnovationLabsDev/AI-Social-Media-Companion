@@ -7,6 +7,7 @@ import FrontPage from './pages-website/frontPage.jsx';
 import MainPage from './pages-website/mainPage.jsx';
 import RegistrationForm from './pages-website/components/registrationForm.jsx';
 import SettingsPage from './pages-website/settingsPage.jsx';
+import HomePage from './pages-website/homePage.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -16,6 +17,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/registration" element={<RegistrationForm />} />
         <Route path="/main-page" element={<MainPage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/home-page" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
