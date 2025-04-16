@@ -82,8 +82,12 @@ function LoginForm() {
 
             <button className={`${classes.social_login} ${classes.google}`}>
                 <FcGoogle /> Continue with Google
-            </button>
-            
+            </button>    
+
+            {/* Don't have an account link */}
+            <p className={classes.dont_have_account}>
+                Don't have an account? <Link to="/registration" className={classes.register_link}>Register now</Link>
+            </p>          
 
             <p className={classes.terms}>
                 By clicking continue, you agree to our <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>.

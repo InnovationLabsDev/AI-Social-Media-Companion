@@ -239,3 +239,50 @@
     color: #f5a623;
     text-decoration: none;
 }
+
+/* 🔑 Register Button */
+.register_button {
+    background: #28a745; /* Green color for Register */
+    color: white;
+    padding: 12px;
+    width: 160px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    transition: background 0.3s;
+    font-family: 'Roboto', sans-serif;
+}
+
+.register_button:hover {
+    background: #218838; /* Darker green on hover */
+}
+
+.register_link {
+    color: white;
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+    font-weight: normal;
+}
+
+.dont_have_account {
+    text-align: center;
+    font-size: 16px;
+    width: 100%;
+    margin-top: 15px;
+    color: #ffffff;
+}
+
+.dont_have_account a {
+    color: #fca311;
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+}
+
+.dont_have_account a:hover {
+    text-decoration: underline;
+}
+
+

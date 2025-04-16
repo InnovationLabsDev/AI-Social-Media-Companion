@@ -1,0 +1,236 @@
+/* Main Container */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: #0b1d3d;
+}
+
+/* Registration Box */
+.register_box {
+    background-color: #1a2a45;
+    padding: 30px;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 450px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    color: white;
+}
+
+/* Register Title */
+.register_box h2 {
+    font-size: 32px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: #fca311;
+    font-family: 'Roboto', sans-serif;
+    text-decoration: underline;
+}
+
+.register_box h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Input Group Styles */
+.input_group {
+    margin-bottom: 20px;
+    text-align: left;
+    font-family: 'Roboto', sans-serif;
+}
+
+.input_group label {
+    font-size: 14px;
+    color: #ffffff;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.input_group input{
+    width: 92%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background-color: #6B818C;
+    color: #ffffff;
+    font-size: 18px;
+    font-family: 'Roboto', sans-serif;
+    outline: none;
+}
+
+.input_group input ::placeholder {
+    color: #0b152b;
+}
+
+.input_group select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background-color: #6B818C;
+    color: #ffffff;
+    font-weight: 400;
+    font-size: 18px;
+    font-family: 'Roboto', sans-serif;
+    outline: none;
+}
+
+.input_group input::placeholder {
+    color: #1a2a45;
+}
+
+/* Permissions Checkboxes */
+.permissions label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.permissions input {
+    margin-right: 10px;
+}
+
+/* Button Group */
+.button_group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 10px; /* Space between buttons */
+}
+
+.small_button {
+    background-color: #fca311;
+    color: #14213d;
+    width: 32%; /* Make buttons smaller */
+    padding: 8px 14px; /* Reduce padding for smaller buttons */
+    border-radius: 8px;
+    font-size: 14px; /* Smaller font size */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: 'Roboto', sans-serif;
+}
+
+.small_button:hover {
+    background-color: #d48c1d;
+}
+
+/* Login Link Styling */
+.login_link {
+    color: #bbb;
+    font-size: 14px;
+    text-decoration: none;
+    display: block;
+    margin-top: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login_link:hover {
+    color: #fca311;
+    text-decoration: underline;
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 480px) {
+    .register_box {
+        padding: 20px;
+    }
+
+    .register_box h2 {
+        font-size: 28px;
+    }
+
+    .register_box h3 {
+        font-size: 22px;
+    }
+
+    .input_group input,
+    .input_group select {
+        font-size: 14px;
+    }
+}
+
+    /* Button Group */
+.button_group {
+    display: flex;
+    justify-content: center; /* Center all buttons by default */
+    margin-top: 20px;
+    gap: 10px;
+}
+
+/* Align the "Next" button from Section 1 to the right */
+.button_group .next_button {
+    margin-left: auto; /* Push the "Next" button to the right */
+}
+
+/* Small Button Styling */
+.small_button {
+    background-color: #fca311;
+    color: #14213d;
+    width: 32%; /* Smaller buttons */
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: 'Roboto', sans-serif;
+}
+
+.small_button:hover {
+    background-color: #d48c1d;
+}
+
+/* Section 4: Social Media Connections */
+.social_media_section {
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.social_media_item {
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.social_media_button {
+    margin-right: 10px;
+    padding: 8px 15px;
+    background-color: #6B818C;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+
+.social_media_item label {
+    margin-right: 10px;
+}
+
+.social_media_item input[type="checkbox"] {
+    margin-left: 10px;
+}
+
+.button_group {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.small_button {
+    padding: 8px 16px;
+    background-color: #fca311;
+    color: black;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.small_button:hover {
+    background-color: #3659a2;
+}
