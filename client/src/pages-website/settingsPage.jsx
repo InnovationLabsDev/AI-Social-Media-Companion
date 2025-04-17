@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import classes from "../styles/settingsPage.module.css"; 
-import Sidebar from "./components/sideBar.jsx"; 
+import classes from "../styles/settingsPage.module.css";
+import Sidebar from "./components/sideBar.jsx";
 
 function SettingsPage() {
     const [permissions, setPermissions] = useState({
@@ -32,9 +32,9 @@ function SettingsPage() {
     return (
         <div className={classes.settingsContainer}>
             <Sidebar />
-            
+
             {/* 🔹 Permissions Section */}
-            <div className={classes.section}>
+            <div className={classes.section + " " + classes.permissionsSection}>
                 <h2>Permissions</h2>
                 <div className={classes.permissionItems}>
                     {Object.keys(permissions).map((permission) => (

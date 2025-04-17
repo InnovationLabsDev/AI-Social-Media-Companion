@@ -1,7 +1,8 @@
 /* Stiluri generale pentru container */
 .settingsContainer {
-    padding: 4vw;
-    background-color: #50687F; /* Fundal ajustat */
+    /* padding: 4%; */
+    background-color: #50687F;
+    /* Fundal ajustat */
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -12,19 +13,26 @@
 
 /* 🔹 Carduri pentru secțiuni */
 .section {
-    background-color: #0D1B2A; /* Card închis la culoare */
+    background-color: #0D1B2A;
+    /* Card închis la culoare */
     width: 90%;
     max-width: 400px;
-    padding: 20px;
+    /* padding: 20px; */
+    margin: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
     margin-bottom: 20px;
+}
+
+.permissionsSection {
+    margin-top: 8vh;
 }
 
 /* 🔹 Titluri pentru secțiuni */
 h2 {
     font-size: 18px;
     margin-bottom: 15px;
+    margin-left: 10px;
     color: #ffffff;
     text-align: left;
 }
@@ -46,7 +54,7 @@ h2 {
     padding: 15px;
     font-size: 16px;
     color: white;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    /* border-bottom: 1px solid rgba(255, 255, 255, 0.2); */
 }
 
 .settingsItem:last-child {
@@ -80,7 +88,7 @@ h2 {
     color: white;
     font-size: 16px;
     padding: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    /* border-bottom: 1px solid rgba(255, 255, 255, 0.2); */
 }
 
 /* 🔹 Custom toggle switch */
@@ -121,10 +129,10 @@ h2 {
     border-radius: 50%;
 }
 
-input:checked + .slider {
+input:checked+.slider {
     background-color: #007bff;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
     transform: translateX(20px);
 }
