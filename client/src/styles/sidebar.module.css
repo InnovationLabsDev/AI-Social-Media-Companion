@@ -28,7 +28,7 @@
   opacity: 1;
 }
 
-/* 🔹 Buton pentru DESCHIDEREA meniului (rotund) */
+/* 🔹 Buton pentru DESCHIDEREA meniului (mai mic și rotund) */
 .openButton {
   position: fixed;
   top: 10px;
@@ -44,10 +44,11 @@
   background-color: #DADADA;
   color: black;
   border: none;
-  font-size: 22px;
+  font-size: 18px;
+  /* Font mai mic */
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
 
@@ -56,6 +57,7 @@
   background-color: lightgray;
   transform: scale(1.1);
 }
+
 
 
 /* 🔹 Buton pentru ÎNCHIDEREA meniului */
