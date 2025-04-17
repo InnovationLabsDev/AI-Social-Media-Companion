@@ -2,15 +2,13 @@ import React, { useState } from 'react';
 import { FaInstagram, FaFacebookF, FaLinkedinIn, FaTwitter, FaPinterest } from 'react-icons/fa';
 import classes from '../../styles/registrationForm.module.css';
 import { Link } from 'react-router-dom';
-import classes from '../../styles/loginForm.module.css';
-import axios from 'axios';
+// import classes from '../../styles/loginForm.module.css';
 
 function RegistrationForm() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [retypePassword, setRetypePassword] = useState('');
-    const [name, setName] = useState('');
     const [businessName, setBusinessName] = useState('');
     const [businessType, setBusinessType] = useState('');
     const [preferredPostType, setPreferredPostType] = useState('');

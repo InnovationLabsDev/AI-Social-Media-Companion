@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import { FaUser, FaLock } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook, FaLinkedin } from 'react-icons/fa';
-import { FaUser, FaLock, FaFacebook, FaLinkedin } from 'react-icons/fa';
-import { FcGoogle } from 'react-icons/fc';
 
 
 import classes from '../../styles/loginForm.module.css';
@@ -18,10 +16,11 @@ function LoginForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false); const [rememberMe, setRememberMe] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
+    const [email, setEmail] = useState('');
 
     const [users, setUsers] = useState([]);
-    const [rememberMe, setRememberMe] = useState(false);
 
     // Legare de backend
     const [array, setArray] = useState([]);
@@ -53,8 +52,46 @@ function LoginForm() {
             setIsLoading(false);
             return;
         }
-        setError('');
-        alert('Login successful');
+
+        try {
+            const response = await axios.post("http://localhost:5000/", {
+                email,
+                password
+            });
+
+            console.log(response.data); // Debugging
+
+            if (response.data.message === "Login successful") {
+                navigate("/main-page");
+            } else {
+                setError("Invalid email or password");
+            }
+        } catch (err) {
+            setError("Invalid email or password");
+            console.error("Login error:", err);
+        } finally {
+            setIsLoading(false);
+        }
+
+        try {
+            const response = await fetch("http://localhost:5000/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem("userId", data.userId); // Store userId
+                console.log("Login successful, userId:", data.userId);
+                navigate("/main-page"); // Redirect to the main page
+            } else {
+                console.error("Login failed:", data.error);
+            }
+        } catch (error) {
+            console.error("Error during login:", error);
+        }
     };
 
     const handleFacebookSuccess = (response) => {
