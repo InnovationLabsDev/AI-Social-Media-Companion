@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import FacebookLogin from '@greatsumini/react-facebook-login';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { FaUser, FaLock } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
+import { FaFacebook, FaLinkedin } from 'react-icons/fa';
 import { FaUser, FaLock, FaFacebook, FaLinkedin } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 
@@ -13,10 +15,11 @@ import { useNavigate } from "react-router-dom";
 // import { Link } from 'react-router-dom';
 
 function LoginForm() {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); const [rememberMe, setRememberMe] = useState(false);
+
     const [users, setUsers] = useState([]);
     const [rememberMe, setRememberMe] = useState(false);
 
@@ -50,47 +53,8 @@ function LoginForm() {
             setIsLoading(false);
             return;
         }
-
-        try {
-            const response = await axios.post("http://localhost:5000/", {
-                email,
-                password
-            });
-
-            console.log(response.data); // Debugging
-
-            if (response.data.message === "Login successful") {
-                navigate("/main-page");
-            } else {
-                setError("Invalid email or password");
-            }
-        } catch (err) {
-            setError("Invalid email or password");
-            console.error("Login error:", err);
-        } finally {
-            setIsLoading(false);
-        }
-
-        try {
-            const response = await fetch("http://localhost:5000/", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                localStorage.setItem("userId", data.userId); // Store userId
-                localStorage.setItem("userName", data.name); // Store userName
-                console.log("Login successful, userId:", data.userId);
-                navigate("/home-page"); // Redirect to the home page
-            } else {
-                console.error("Login failed:", data.error);
-            }
-        } catch (error) {
-            console.error("Error during login:", error);
-        }
+        setError('');
+        alert('Login successful');
     };
 
     const handleFacebookSuccess = (response) => {
@@ -166,6 +130,10 @@ function LoginForm() {
                 <FcGoogle /> Continue with Google
             </button>
 
+            {/* Don't have an account link */}
+            <p className={classes.dont_have_account}>
+                Don't have an account? <Link to="/registration" className={classes.register_link}>Register now</Link>
+            </p>
 
             <p className={classes.terms}>
                 By clicking continue, you agree to our <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>.
