@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import classes from "../styles/mainPage.module.css";
-import Sidebar from "./components/sideBar.jsx";
+import Menu from "./components/sideBar.jsx";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FiRefreshCcw } from "react-icons/fi";
 import { FaInstagram, FaFacebookF, FaLinkedinIn, FaTwitter, FaPinterest } from "react-icons/fa";
@@ -139,6 +139,7 @@ const MainPage = () => {
 
     return (
         <div className={classes.container}>
+            <Menu />
             <div className={classes.header}>
                 <h1 className={classes.appTitle}>PostPal 🚀</h1>
                 <FaRegUserCircle className={classes.userIcon} />

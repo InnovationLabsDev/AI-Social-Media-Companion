@@ -11,16 +11,19 @@
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   border-radius: 0 15px 15px 0;
-  display: none;  /* Meniul este complet ascuns */
+  display: none;
+  /* Meniul este complet ascuns */
   flex-direction: column;
   align-items: center;
   transition: transform 0.3s ease-in-out, opacity 0.2s ease-in-out;
   border-radius: 0;
+  z-index: 999;
 }
 
 /* 🔹 Când meniul este deschis */
 .sidebar.open {
-  display: flex;  /* Apare doar când este deschis */
+  display: flex;
+  /* Apare doar când este deschis */
   transform: translateX(0);
   opacity: 1;
 }
@@ -28,15 +31,17 @@
 /* 🔹 Buton pentru DESCHIDEREA meniului (rotund) */
 .openButton {
   position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 50px;  /* Face butonul rotund */
+  top: 10px;
+  left: 10px;
+  width: 50px;
+  /* Face butonul rotund */
   height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;  /* Rotunjire completă */
-  background-color: white;
+  border-radius: 50%;
+  /* Rotunjire completă */
+  background-color: #DADADA;
   color: black;
   border: none;
   font-size: 22px;
@@ -58,10 +63,13 @@
   position: absolute;
   top: 10px;
   right: 15px;
-  background-color: white;
+  background-color: #DADADA;
   color: black;
   padding: 8px 12px;
   border: none;
+  width: 50px;
+  /* Face butonul rotund */
+  height: 50px;
   border-radius: 50%;
   cursor: pointer;
   font-size: 18px;

@@ -62,7 +62,7 @@ function LoginForm() {
             console.log(response.data); // Debugging
 
             if (response.data.message === "Login successful") {
-                navigate("/main-page");
+                navigate("/home-page");
             } else {
                 setError("Invalid email or password");
             }
@@ -85,7 +85,7 @@ function LoginForm() {
             if (response.ok) {
                 localStorage.setItem("userId", data.userId); // Store userId
                 console.log("Login successful, userId:", data.userId);
-                navigate("/main-page"); // Redirect to the main page
+                navigate("/home-page"); // Redirect to the main page
             } else {
                 console.error("Login failed:", data.error);
             }

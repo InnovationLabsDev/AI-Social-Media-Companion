@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import classes from "../styles/homePage.module.css";
+import Menu from "./components/sideBar"
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -81,6 +82,7 @@ const HomePage = () => {
 
     return (
         <div className={classes.container}>
+            <Menu />
             {/* Header */}
             <div className={classes.header}>
                 <h1 className={classes.appTitle}>PostPal 🚀</h1>

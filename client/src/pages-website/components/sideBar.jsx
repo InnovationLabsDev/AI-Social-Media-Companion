@@ -39,7 +39,7 @@ function Sidebar() {
             ✖
           </button>
 
-          <button onClick={() => handleNavigation("/")} className={styles.menuButton}>
+          <button onClick={() => handleNavigation("/home-page")} className={styles.menuButton}>
             🏠 Home
           </button>
           <button onClick={() => handleNavigation("/main-page")} className={styles.menuButton}>
