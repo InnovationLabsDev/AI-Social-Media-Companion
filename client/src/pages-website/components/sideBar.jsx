@@ -1,41 +1,61 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "../../styles/sidebar.module.css"; // Update the path if needed
+import styles from "../../styles/sidebar.module.css"; // Asigură-te că calea e corectă
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Function to toggle sidebar visibility
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+  // Funcție pentru a deschide meniul
+  const openSidebar = () => {
+    setIsOpen(true);
   };
 
-  // Function to navigate when clicking a button
+  // Funcție pentru a închide meniul
+  const closeSidebar = () => {
+    setIsOpen(false);
+  };
+
+  // Navigare și închidere automată a meniului
   const handleNavigation = (path) => {
     navigate(path);
-    setIsOpen(false); // Close sidebar after navigating
+    closeSidebar(); // Închide meniul după navigare
   };
 
   return (
     <>
-      {/* 🔹 Toggle Button */}
-      <button onClick={toggleSidebar} className={styles.toggleButton}>
-        {isOpen ? "Close Menu" : "Open Menu"}
-      </button>
+      {/* 🔹 Buton pentru DESCHIDERE meniului (vizibil doar când e închis) */}
+      {!isOpen && (
+        <button onClick={openSidebar} className={styles.openButton}>
+          ☰
+        </button>
+      )}
 
       {/* 🔹 Sidebar */}
-      <div className={`${styles.sidebar} ${isOpen ? styles.open : styles.closed}`}>
-        <button onClick={() => handleNavigation("/")} className={styles.menuButton}>
-          Home
-        </button>
-        <button onClick={() => handleNavigation("/main-page")} className={styles.menuButton}>
-          Main Page
-        </button>
-        <button onClick={() => handleNavigation("/settings")} className={styles.menuButton}>
-          Settings
-        </button>
-      </div>
+      {isOpen && (
+        <div className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
+          {/* 🔹 Buton pentru ÎNCHIDERE meniului (vizibil doar când e deschis) */}
+          <button onClick={closeSidebar} className={styles.closeButton}>
+            ✖
+          </button>
+
+          <button onClick={() => handleNavigation("/")} className={styles.menuButton}>
+            🏠 Home
+          </button>
+          <button onClick={() => handleNavigation("/main-page")} className={styles.menuButton}>
+            📤 Upload
+          </button>
+          <button onClick={() => handleNavigation("/main-page")} className={styles.menuButton}>
+            ⏰ Schedule
+          </button>
+          <button onClick={() => handleNavigation("/main-page")} className={styles.menuButton}>
+            📊 Stats
+          </button>
+          <button onClick={() => handleNavigation("/settings")} className={styles.menuButton}>
+            ⚙️ Settings
+          </button>
+        </div>
+      )}
     </>
   );
 }
