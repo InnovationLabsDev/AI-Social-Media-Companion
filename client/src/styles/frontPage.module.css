@@ -6,9 +6,8 @@
     align-items: center;
     width: 100vw;
     height: 100vh;
-    background-image: url("../../public/frontpage_oldold.webp");
+    background: #14213D;
     background-size: cover;
     background-position: center;
-    background-color: rgba(0, 0, 0, 0.3);
-    background-blend-mode: multiply;
+    background-repeat: no-repeat;
 }
