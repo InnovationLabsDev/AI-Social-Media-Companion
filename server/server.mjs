@@ -10,6 +10,11 @@ import cloudinary from 'cloudinary';
 import User from './models/User.mjs'; 
 import Photo from './models/Photo.mjs';
 import { uploadToCloudinary } from './models/cloudinaryService.mjs';
+import { exec } from 'child_process';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const hasSynced = new Set();
 
 dotenv.config();
 
@@ -35,6 +40,9 @@ mongoose.connect(process.env.MONGO_URI, {
 
 const storage = multer.memoryStorage(); // Store files in memory (for Cloudinary streaming)
 const upload = multer({ storage: storage }); // Initialize multer with memory storage
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname  = path.dirname(__filename);
 
 // // Create basic routes
 // app.get('/', (req, res) => {
@@ -164,37 +172,55 @@ app.post('/register', async (req, res) => {
 
 // Login route
 app.post('/', async (req, res) => {
+    console.log('[login] incoming request at', new Date().toISOString());
     const { email, password } = req.body;
-    const name = email;
-
     if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password are required' });
+      return res.status(400).json({ error: 'Email and password are required' });
     }
-    
+  
     try {
-        // Find the user by email or name
-        const user = await User.findOne({ $or: [{ email }, { name }] });
-        if (!user) {
-            return res.status(401).json({ error: 'Invalid email or password' });
-        }
-
-        // Check if the password matches
-        const isMatch = await user.comparePassword(password);
-        if (!isMatch) {
-            return res.status(401).json({ error: 'Invalid email or password' });
-        }
-
-        userId = user._id;
-        userName = user.name;
-        // Return success message or JWT here (if using JWT)
-        res.json({ message: 'Login successful', userId: user._id, name: user.name });
-        
-
+      // 1) Authenticate
+      const user = await User.findOne({ $or: [{ email }, { name: email }] });
+      if (!user) {
+        return res.status(401).json({ error: 'Invalid email or password' });
+      }
+      const isMatch = await user.comparePassword(password);
+      if (!isMatch) {
+        return res.status(401).json({ error: 'Invalid email or password' });
+      }
+  
+      // 2) Prepare userId
+      const userId = user._id.toString();
+  
+      // 3) Start the Python sync in background, but only once per 10 seconds
+      if (!hasSynced.has(userId)) {
+        hasSynced.add(userId);
+  
+        const scriptPath = path.join(__dirname, 'scripts', 'fetchCalendar.py');
+        const cmd        = `python "${scriptPath}" --user-id ${userId}`;
+        exec(cmd, { env: process.env }, (err, stdout, stderr) => {
+          if (err) console.error('Calendar sync error for user', userId, stderr);
+          else     console.log('Calendar sync output for user', userId, stdout);
+        });
+  
+        // clear the flag after 10 seconds so future logins will sync again
+        setTimeout(() => {
+          hasSynced.delete(userId);
+        }, 10_000);
+      }
+  
+      // 4) Send the login response
+      return res.json({
+        message: 'Login successful, calendar sync started if not already in last 10s',
+        userId,
+        name: user.name
+      });
+  
     } catch (err) {
-        console.error("Login error:", err);
-        res.status(500).json({ error: 'Server error' });
+      console.error("Login error:", err);
+      return res.status(500).json({ error: 'Server error' });
     }
-});
+  });
 
 async function generateCaptions(userId, imageUrl) {
     try {
@@ -205,7 +231,7 @@ async function generateCaptions(userId, imageUrl) {
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         const prompt = "Generate 5 creative social media captions with 3-5 hashtags for this image," + 
-        " with the location being Tandem Building, Orange office and the date of the second Bootcamp at InnovationLabs.";
+        " with the location being Adobe and the date of the Second Bootcamp at InnovationLabs.";
         const imagePart = { inlineData: { data: base64Image, mimeType: "image/jpeg" } };
 
         const result = await model.generateContent([prompt, imagePart]);
