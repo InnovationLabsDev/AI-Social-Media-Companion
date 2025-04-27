@@ -92,7 +92,7 @@ function SettingsPage() {
         <ul className={classes.settingsList}>
           <li className={classes.settingsItem}>
             Post Generation Frequency
-            <button className={classes.arrowButton} onClick={() => setShowFrequencyInput(!showFrequencyInput)}>▶</button>
+            <button className={classes.arrowButton} onClick={() => setShowFrequencyInput(!showFrequencyInput)}>▼</button>
           </li>
           {showFrequencyInput && (
             <li className={classes.inputItemStyled}>
@@ -112,7 +112,7 @@ function SettingsPage() {
 
           <li className={classes.settingsItem}>
             Preferred Post Type
-            <button className={classes.arrowButton} onClick={() => setShowPostTypeInput(!showPostTypeInput)}>▶</button>
+            <button className={classes.arrowButton} onClick={() => setShowPostTypeInput(!showPostTypeInput)}>▼</button>
           </li>
           {showPostTypeInput && (
             <li className={classes.inputItemStyled}>
@@ -138,7 +138,7 @@ function SettingsPage() {
         <ul className={classes.settingsList}>
           <li className={classes.settingsItem}>
             Change profile picture
-            <button className={classes.arrowButton} onClick={() => setShowPicInput(!showPicInput)}>▶</button>
+            <button className={classes.arrowButton} onClick={() => setShowPicInput(!showPicInput)}>▼</button>
           </li>
           {showPicInput && (
             <li className={classes.inputItemStyled}>
@@ -152,7 +152,7 @@ function SettingsPage() {
 
           <li className={classes.settingsItem}>
             Change name
-            <button className={classes.arrowButton} onClick={() => setShowNameInput(!showNameInput)}>▶</button>
+            <button className={classes.arrowButton} onClick={() => setShowNameInput(!showNameInput)}>▼</button>
           </li>
           {showNameInput && (
             <li className={classes.inputItemStyled}>
@@ -171,7 +171,7 @@ function SettingsPage() {
 
           <li className={classes.settingsItem}>
             Change email
-            <button className={classes.arrowButton} onClick={() => setShowEmailInput(!showEmailInput)}>▶</button>
+            <button className={classes.arrowButton} onClick={() => setShowEmailInput(!showEmailInput)}>▼</button>
           </li>
           {showEmailInput && (
             <li className={classes.inputItemStyled}>
@@ -188,7 +188,7 @@ function SettingsPage() {
 
           <li className={classes.settingsItem}>
             Change password
-            <button className={classes.arrowButton} onClick={() => setShowPasswordInput(!showPasswordInput)}>▶</button>
+            <button className={classes.arrowButton} onClick={() => setShowPasswordInput(!showPasswordInput)}>▼</button>
           </li>
           {showPasswordInput && (
             <>
@@ -217,7 +217,7 @@ function SettingsPage() {
 
           <li className={classes.settingsItem}>
             Business Info
-            <button className={classes.arrowButton} onClick={() => setShowBusinessInput(!showBusinessInput)}>▶</button>
+            <button className={classes.arrowButton} onClick={() => setShowBusinessInput(!showBusinessInput)}>▼</button>
           </li>
           {showBusinessInput && (
             <>
@@ -246,7 +246,7 @@ function SettingsPage() {
 
           <li className={classes.settingsItem}>
             Manage connected accounts
-            <button className={classes.arrowButton}>▶</button>
+            <button className={classes.arrowButton}>▼</button>
           </li>
         </ul>
       </div>

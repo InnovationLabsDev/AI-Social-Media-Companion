@@ -1,18 +1,34 @@
+/* Font variables (global) */
+:root {
+    --main-font: 'Inter', sans-serif;
+    --main-size: 16px;
+    --main-weight: 400;
+    --heading-weight: 600;
+    --text-color: #ffffff;
+    --accent-color: #00A8E8E8;
+    --select-bg: #5a7e8f;
+    --select-hover-bg: #688fa0;
+}
+
 /* Stiluri generale pentru container */
 .settingsContainer {
     padding: 4vw;
-    background-color: #50687F; /* Fundal ajustat */
+    background-color: #50687F;
     width: 100vw;
     height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    font-family: var(--main-font);
+    font-size: var(--main-size);
+    font-weight: var(--main-weight);
+    color: var(--text-color);
 }
 
 /* 🔹 Carduri pentru secțiuni */
 .section {
-    background-color: #0D1B2A; /* Card închis la culoare */
+    background-color: #0D1B2A;
     width: 90%;
     max-width: 400px;
     padding: 20px;
@@ -22,10 +38,12 @@
 }
 
 /* 🔹 Titluri pentru secțiuni */
-h2 {
+.section h2 {
+    font-family: var(--main-font);
     font-size: 18px;
+    font-weight: var(--heading-weight);
     margin-bottom: 15px;
-    color: #ffffff;
+    color: var(--text-color);
     text-align: left;
 }
 
@@ -39,17 +57,21 @@ h2 {
 }
 
 /* 🔹 Elemente individuale din listă */
-.settingsItem {
+.settingsItem,
+.permissionItem {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
-    font-size: 16px;
-    color: white;
+    padding: 15px 0;
+    font-family: var(--main-font);
+    font-size: var(--main-size);
+    font-weight: var(--main-weight);
+    color: var(--text-color);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.settingsItem:last-child {
+.settingsItem:last-child,
+.permissionItem:last-child {
     border-bottom: none;
 }
 
@@ -57,30 +79,29 @@ h2 {
 .arrowButton {
     background: none;
     border: none;
-    color: white;
+    color: var(--text-color);
     font-size: 18px;
     cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.arrowButton.open {
+    transform: rotate(90deg);
 }
 
 .arrowButton:hover {
-    color: #00A8E8;
+    color: var(--accent-color);
 }
 
 /* 🔹 Lista de permisiuni (switch-uri) */
 .permissionItems {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    width: 100%;
 }
 
 .permissionItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    font-size: 16px;
-    padding: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 12px 0;
 }
 
 /* 🔹 Custom toggle switch */
@@ -129,3 +150,59 @@ input:checked + .slider:before {
     transform: translateX(20px);
 }
 
+/* 🔹 Stiluri pentru etichete input */
+.inputLabel {
+    font-family: var(--main-font);
+    font-size: var(--main-size);
+    font-weight: var(--main-weight);
+    color: var(--text-color);
+}
+
+/* 🔹 Stil input-uri text */
+.styledTextInput,
+.nameInputStyled {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 5px;
+    font-family: var(--main-font);
+    font-size: var(--main-size);
+    color: var(--text-color);
+    background: transparent;
+}
+
+/* 🔹 Stil pentru dropdown-uri (select) și opțiuni */
+.selectStyled {
+    width: 100%;
+    padding: 8px 12px;
+    font-family: var(--main-font);
+    font-size: var(--main-size);
+    color: var(--text-color);
+    background-color: var(--select-bg);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 5px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L5 6 L10 0' fill='none' stroke='%23fff'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+}
+
+.selectStyled:hover {
+    background-color: var(--select-hover-bg);
+}
+
+.selectStyled option {
+    background-color: var(--select-bg);
+    color: var(--text-color);
+}
+
+/* 🔹 Preview imagine profil */
+.inlinePreview {
+    margin-left: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
